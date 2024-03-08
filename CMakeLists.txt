@@ -10,7 +10,7 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("learnVk")
+project ("radiance")
 
 ## get submodules from github
 find_package(Git QUIET)
@@ -35,11 +35,16 @@ endif()
 
 
 
-
 file(GLOB src
+    "src/cameras/*.cpp"
+    "src/geometry/*.cpp"
+    "src/io/*.cpp"
+    "src/lights/*.cpp"
+    "src/materials/*.cpp"
     "src/math/*.cpp"
-    "external/tiny_obj_loader/tiny_obj_loader.cpp"
-    "external/stb_img/stb_image.cpp"
+    "src/scene/*.cpp"
+    "external/stb_image/stb_image.cpp"
+    "external/stb_image/stb_image_write.cpp"
 )
 
 
@@ -56,10 +61,14 @@ set(TEXTURE_DIR
     " \"${CMAKE_CURRENT_LIST_DIR}/assets/textures/\" "
 )
 
+set(OUTPUT_DIR 
+    " \"${CMAKE_CURRENT_LIST_DIR}/output/\" "
+)
+
 message("Using Asset directory: ${ASSET_DIR}")
 message("Using Model directory: ${MODEL_DIR}")
 message("Using Image directory: ${TEXTURE_DIR}")
-
+message("Using Output directory: ${OUTPUT_DIR}")
 
 
 configure_file(
@@ -67,8 +76,8 @@ configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/src/settings.h"
 )
 
+message("Building radiance...")
 
-#add_executable(${EXECUTABLE_NAME} ${SOURCE_PATH})
 add_executable (
     radiance
     src/main.cpp
@@ -78,14 +87,50 @@ add_executable (
 
 target_include_directories(
     radiance
-    PUBLIC external/stb_img
-    PUBLIC external/tiny_obj
+    PUBLIC external
     PUBLIC src
 )
 
 set_property(TARGET radiance PROPERTY CXX_STANDARD 17)
 
 
+file(
+    GLOB EXAMPLES
+    "examples/*.cpp"
+)
+
+message("Building examples...")
+
+set( 
+    EXAMPLE_BUILD_DIR 
+    "${CMAKE_CURRENT_LIST_DIR}/build/examples"
+)
+
+foreach(EXAMPLE ${EXAMPLES})
+
+    get_filename_component(EXECUTABLE_NAME ${EXAMPLE} NAME_WE)
+
+    message("Building ${EXECUTABLE_NAME}")
+
+    #add_executable(${EXECUTABLE_NAME} ${SOURCE_PATH})
+    add_executable (
+        ${EXECUTABLE_NAME}
+        ${EXAMPLE}
+        ${src}
+    )
+
+   
+    target_include_directories(
+        ${EXECUTABLE_NAME}
+        PUBLIC external
+        PUBLIC src
+    )
+
+  
+    set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 17)
+
+
+endforeach(EXAMPLE ${EXAMPLES})
 
 
 

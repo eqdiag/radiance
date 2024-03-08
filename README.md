@@ -16,15 +16,18 @@ All dependencies are self-contained in this project using git's submodule system
 
 ## Features
 ### Assignment 1
-- [ ] color gradient
-- [ ] rays from cam
-- [ ] sphere interesection
-- [ ] camera control
-- [ ] add many spheres
-- [ ] lambertian lighting
-- [ ] antialiasing
-- [ ] mirrors
-- [ ] parallel
+- [x] color gradient
+- [x] rays from cam
+- [x] sphere interesection
+- [x] command line args
+- [x] camera control
+- [x] add many spheres
+- [x] examples
+- [x] lambertian lighting
+- [x] antialiasing
+- [x] add materials
+- [x] scene reorg for recursion
+- [x] mirrors
 - [ ] glass
 - [ ] defocus blur
 ### Assignment 2
@@ -60,6 +63,9 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] determnistic MIS
 
 ### Bonus
+- [ ] replace random gen with PCG
+- [ ] parallel (openmp, not working on my mac :( )
+
 
 ## Installation
 
@@ -75,10 +81,20 @@ make
 ```
 
 ## Usage
+The CLI version of *radiance* contains many options than be passed to control the rendering behavior.
+They are organized by parts of the scene that will be affected.
 
+### Camera params
 ```
-
+[-w,--width] = 256: Width of the image 
+[-h,--height] = 256: Height of the image
+[-vfov] = 90: Vertical field of view for the camera 
+[-lookfrom] = [0,0,0]: Eye/Origin of the camera 
+[-lookAt] = [0,0,-1]: Forward view direction of the camera 
 ```
-
+### File params
+```
+[-o,--out] = out.png: Output file name of image, stored in ./output directory
+```
 
 ## Screenshots 
