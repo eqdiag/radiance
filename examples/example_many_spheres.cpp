@@ -58,7 +58,7 @@ int main(int argc,char ** argv){
     viewing_plane.imageWidth = w;
     viewing_plane.focalLength = focalLength;
  
-    cameras::PerspectiveCamera camera{viewing_plane,vfov,lookFrom,lookAt};
+    cameras::PerspectiveCamera camera{viewing_plane,vfov,0.0f,lookFrom,lookAt};
 
 
     scene::Scene scene{};

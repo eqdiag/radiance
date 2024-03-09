@@ -66,7 +66,7 @@ int main(int argc,char ** argv){
     viewing_plane.focalLength = focalLength;
     viewing_plane.spp = spp;
  
-    cameras::PerspectiveCamera camera{viewing_plane,vfov,lookFrom,lookAt};
+    cameras::PerspectiveCamera camera{viewing_plane,vfov,0.0f,lookFrom,lookAt};
 
     /* Materials */
 

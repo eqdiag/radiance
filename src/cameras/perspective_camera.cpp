@@ -1,16 +1,19 @@
 #include "perspective_camera.h"
 
 #include "math/util.h"
+#include "math/rand.h"
 
 cameras::PerspectiveCamera::PerspectiveCamera(
     const ViewingPlane &plane,
     float vfov,
+    float lensRadius,
     math::Vec3 lookFrom,
     math::Vec3 lookAt,
     math::Vec3 up
 ):
     _viewHeight{static_cast<float>(2.0 * plane.focalLength * tan(math::degToRad(vfov)*0.5))},
     _viewWidth{ _viewHeight * plane.aspectRatio},
+    _lensRadius{lensRadius},
     _eye{lookFrom},
     _front{(lookAt - lookFrom).normalize()},
     _up{up.normalize()},
@@ -26,5 +29,7 @@ cameras::PerspectiveCamera::PerspectiveCamera(
 math::Ray cameras::PerspectiveCamera::generateRay(float x, float y) const
 {
     auto view_pt = _topLeftPixelCenter + _dx*x + _dy*y;
-    return math::Ray{_eye,view_pt - _eye};
+    auto dr = math::randomUnitDisk()*_lensRadius;
+    auto eye_pt = _eye + _right*dr.x() + _up*dr.y();
+    return math::Ray{eye_pt,view_pt - eye_pt};
 }

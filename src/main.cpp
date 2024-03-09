@@ -13,6 +13,9 @@
 #include "math/rand.h"
 
 #include "materials/diffuse.h"
+#include "materials/mirror.h"
+#include "materials/glass.h"
+
 
 #include "argh/argh.h"
 
@@ -22,13 +25,18 @@ int main(int argc,char ** argv){
 
     /* Viewing plane params */
     int w;
-    cmdl({"-w","--width"},256) >> w;
+    cmdl({"-w","--width"},600) >> w;
 
     int h;
-    cmdl({"-h","--height"},256) >> h;
+    cmdl({"-h","--height"},400) >> h;
 
     float focalLength;
     cmdl({"-f","--focal"},1.0f) >> focalLength;
+    std::cout << focalLength << std::endl;
+
+    float lensRadius;
+    cmdl({"-r","--radius"},0.0f) >> lensRadius;
+    std::cout << lensRadius << std::endl;
 
     /* Fov params */
     float vfov;
@@ -65,7 +73,7 @@ int main(int argc,char ** argv){
     viewing_plane.focalLength = focalLength;
     viewing_plane.spp = spp;
  
-    cameras::PerspectiveCamera camera{viewing_plane,vfov,lookFrom,lookAt};
+    cameras::PerspectiveCamera camera{viewing_plane,vfov,lensRadius,lookFrom,lookAt};
 
     /* Materials */
 
@@ -76,16 +84,22 @@ int main(int argc,char ** argv){
     /* Objects */
 
     auto blue_material = std::make_shared<materials::Diffuse>(math::Color3{0,0,1});
+    auto mirro = std::make_shared<materials::Mirror>();
+    auto glass = std::make_shared<materials::Glass>(1.5);
+
     auto red_material = std::make_shared<materials::Diffuse>(math::Color3{1,0,0});
 
 
     auto center = math::Vec3{0,0,-1};
     auto sphere0 = std::make_shared<geometry::Sphere>(center,0.5f,blue_material);
-    center = math::Vec3{0.0f,-100.0f,0.0f};
-    auto sphere1 = std::make_shared<geometry::Sphere>(center,99.5f,red_material);
+    center = math::Vec3{-1.0f,0,-1};
+    auto sphere1 = std::make_shared<geometry::Sphere>(center,0.5f,glass);
+    center = math::Vec3{0.0f,-100.5f,0.0f};
+    auto sphere2 = std::make_shared<geometry::Sphere>(center,100.0f,red_material);
 
     scene.addObject(sphere0);
     scene.addObject(sphere1);
+    scene.addObject(sphere2);
 
 
     lights::PointLight light{};

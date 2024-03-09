@@ -14,8 +14,13 @@ namespace geometry{
     struct Hit{
         math::Vec3 point{};
         math::Vec3 normal{};
+        //Hit from outside, or inside
+        bool outside{};
         float t;
         std::shared_ptr<materials::Material> _material{};
+
+        void setFaceNormal(const math::Vec3& in,const math::Vec3& n);
+
     };
 
     class Hittable{

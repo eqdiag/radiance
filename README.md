@@ -28,8 +28,9 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] add materials
 - [x] scene reorg for recursion
 - [x] mirrors
-- [ ] glass
-- [ ] defocus blur
+- [x] glass
+- [x] defocus blur
+
 ### Assignment 2
 - [ ] triangle
 - [ ] tri mesh

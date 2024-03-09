@@ -25,9 +25,9 @@ bool geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax
     if((t > tmin) && (tmax > t)){
         hit.t = t;
         hit.point = ray.cast(t);
-        hit.normal = (hit.point - _center) / _radius;
+        auto normal = (hit.point - _center) / _radius;
         //Adjust so that normal always faces away from ray dir
-        hit.normal = hit.normal.dot(ray.getDir()) > 0.0f ? -hit.normal : hit.normal;
+        hit.setFaceNormal(ray.getDir(),normal);
         hit._material = _material;
         return true;
     }
@@ -35,9 +35,9 @@ bool geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax
     if((t > tmin) && (tmax > t)){
         hit.t = t;
         hit.point = ray.cast(t);
-        hit.normal = (hit.point - _center) / _radius;
+        auto normal = (hit.point - _center) / _radius;
         //Adjust so that normal always faces away from ray dir
-        hit.normal = hit.normal.dot(ray.getDir()) > 0.0f ? -hit.normal : hit.normal;
+        hit.setFaceNormal(ray.getDir(),normal);
         hit._material = _material;
         return true;
     }

@@ -19,6 +19,7 @@ namespace cameras{
             PerspectiveCamera(
                 const ViewingPlane& plane,
                 float vfov = 90.0f,
+                float lensRadius = 0.0f,
                 math::Vec3 lookFrom = math::Vec3{0,0,0},
                 math::Vec3 lookAt = math::Vec3{0,0,-1},
                 math::Vec3 up = math::Vec3{0,1,0}
@@ -31,6 +32,8 @@ namespace cameras{
 
             float _viewHeight{};
             float _viewWidth{};
+
+            float _lensRadius{};
 
             math::Vec3 _eye{};
 

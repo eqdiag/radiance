@@ -14,6 +14,13 @@ namespace math{
     /* Also assumes both vectors are normalized */
     Vec3 reflect(const Vec3& in,const Vec3& normal);
 
-    //Vec3 refract()
+    /* Assumes in, and normal are in different directions: in.dot(normal) < 0 */
+    /* Also assumes both vectors are normalized */
+    Vec3 refract(const Vec3& in,const Vec3& normal,float indexRatio);
+
+    /* Schlick approximation for total internal reflection*/
+    float schlick(float cos,float indexRatio);
+
+    
 
 }
