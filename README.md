@@ -64,13 +64,14 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] determnistic MIS
 
 ## Minor cleanup
--[ ] Tri mesh triangle intersection speed up
-    - creating too many tris + shared ptr copies
-    - determinant based intersection
--[ ] Delete copy operators if ya don't need em
--[ ] Make sure persp camera is always ortho
--[ ] put everythning into radiance namespace
--[ ] make radiance a lib so exmaples compile faster
+- [ ] Tri mesh triangle intersection speed up
+    - [ ] creating too many tris + shared ptr copies
+    - [ ] determinant based intersection
+- [ ] Delete copy operators if ya don't need em
+- [ ] Make sure persp camera is always ortho
+- [ ] put everythning into radiance namespace
+- [ ] make radiance a lib so exmaples compile faster
+- [ ] make sure dependencies all in readme
 
 ### Bonus
 - [ ] replace random gen with PCG
