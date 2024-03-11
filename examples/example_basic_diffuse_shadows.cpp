@@ -41,7 +41,7 @@ int main(int argc,char ** argv){
 
     /* Outfile param */
     std::string out_file{};
-    cmdl({"-o","--out"},"basic_diffuse_shadows.png") >> out_file;
+    cmdl({"-o","--out"},"example_basic_diffuse_shadows.png") >> out_file;
     std::string filename = OUTPUT_DIR + out_file;
 
     /* Camera params */

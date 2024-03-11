@@ -14,37 +14,22 @@
 
 #include "materials/diffuse.h"
 #include "materials/mirror.h"
-#include "materials/glass.h"
-
-#include "geometry/tri.h"
 
 #include "argh/argh.h"
-
-#include "pugixml/src/pugixml.hpp"
-
-#include "geometry/tri_mesh.h"
-
-#include "io/mesh.h"
 
 int main(int argc,char ** argv){
 
     auto cmdl = argh::parser(argc, argv);
 
-    
     /* Viewing plane params */
     int w;
-    cmdl({"-w","--width"},600) >> w;
+    cmdl({"-w","--width"},256) >> w;
 
     int h;
-    cmdl({"-h","--height"},400) >> h;
+    cmdl({"-h","--height"},256) >> h;
 
     float focalLength;
     cmdl({"-f","--focal"},1.0f) >> focalLength;
-    //std::cout << focalLength << std::endl;
-
-    float lensRadius;
-    cmdl({"-r","--radius"},0.0f) >> lensRadius;
-    //std::cout << lensRadius << std::endl;
 
     /* Fov params */
     float vfov;
@@ -53,13 +38,12 @@ int main(int argc,char ** argv){
     //Samples per pixel (anti-aliasing)
     int spp;
     cmdl("-spp",1) >> spp;
-    //std::cout << spp << std::endl;
+    std::cout << spp << std::endl;
 
     /* Outfile param */
     std::string out_file{};
-    cmdl({"-o","--out"},"out.png") >> out_file;
+    cmdl({"-o","--out"},"example_mirror.png") >> out_file;
     std::string filename = OUTPUT_DIR + out_file;
-
 
     /* Camera params */
 
@@ -82,11 +66,9 @@ int main(int argc,char ** argv){
     viewing_plane.focalLength = focalLength;
     viewing_plane.spp = spp;
  
-    cameras::PerspectiveCamera camera{viewing_plane,vfov,lensRadius,lookFrom,lookAt};
+    cameras::PerspectiveCamera camera{viewing_plane,vfov,0.0f,lookFrom,lookAt};
 
     /* Materials */
-    auto blue_material = std::make_shared<materials::Diffuse>(math::Color3{0,0,1});
-    auto red_material = std::make_shared<materials::Diffuse>(math::Color3{1,0,0});
 
 
 
@@ -94,35 +76,22 @@ int main(int argc,char ** argv){
 
     /* Objects */
 
+    auto blue_material = std::make_shared<materials::Diffuse>(math::Color3{0,0,1});
+    auto red_material = std::make_shared<materials::Diffuse>(math::Color3{1,0,0});
+    auto mirror_material = std::make_shared<materials::Mirror>();
 
-    std::string file = MODEL_DIR + std::string{"icosahedron.ply"};
-    //std::string file = MODEL_DIR + std::string{"oct.obj"};
+    auto center = math::Vec3{0,0,-1};
+    auto sphere0 = std::make_shared<geometry::Sphere>(center,0.5f,mirror_material);
+    center = math::Vec3{0.0f,-100.0f,0.0f};
+    auto sphere1 = std::make_shared<geometry::Sphere>(center,99.5f,red_material);
 
-
-    auto mesh = std::make_shared<geometry::TriMesh>(red_material);
-
-    //Reading meshes example
-
-    if(!radiance::io::readTriMeshFromFile(*mesh,file.c_str(),radiance::io::MeshFileType::PLY)){
-        std::cerr << "ERR: Couldn't read mesh: " << file << std::endl;
-        abort();
-    }else{
-        std::cout << "Loaded mesh: " << file << std::endl;
-    }
-
-
-    auto center = math::Vec3{0.0f,-100.0f,0.0f};
-    auto sphere1 = std::make_shared<geometry::Sphere>(center,99.5f,blue_material);
-
-    //auto mesh = std::make_shared<geometry::Tri>(math::Vec3{0,1,-3},math::Vec3{-1,-1,-3},math::Vec3{1,-1,-3},blue_material);
-
-    scene.addObject(mesh);
-   //scene.addObject(sphere1);
+    scene.addObject(sphere0);
+    scene.addObject(sphere1);
 
 
     lights::PointLight light{};
     light.position = math::Vec3{3,3,0};
-    light.intensity = math::Vec3{1,1,1}*40.0f;
+    light.intensity = math::Vec3{1,1,1}*30.0;
 
     scene.addLight(light);
 
@@ -155,7 +124,6 @@ int main(int argc,char ** argv){
             pixels[idx + 1] = g*255.99;
             pixels[idx + 2] = b*255.99;
         }
-        std::cout << "Rendered line: [" << i + 1<< "/" << h << "]\n"; 
     }
 
     if(!radiance::io::writeBufferToRGB_PNG(pixels,w,h,filename.c_str())){

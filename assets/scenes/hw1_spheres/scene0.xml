@@ -41,7 +41,6 @@
 	<shape type="sphere">
 	    <point name="center" x="0" y="-100.5" z="3"/>
 	    <float name="radius" value="100.0"/>
-
 		<ref id="blue"/>
 	</shape>
 </scene>

@@ -57,14 +57,14 @@ int main(int argc,char ** argv){
 
     /* Outfile param */
     std::string out_file{};
-    cmdl({"-o","--out"},"out.png") >> out_file;
+    cmdl({"-o","--out"},"example_mesh_load.png") >> out_file;
     std::string filename = OUTPUT_DIR + out_file;
 
 
     /* Camera params */
 
     math::Vec3 lookFrom{};
-    cmdl("-lookfrom","[0,0,0]") >> lookFrom;
+    cmdl("-lookfrom","[0,0,4]") >> lookFrom;
 
     math::Vec3 lookAt{};
     cmdl("-lookAt","[0,0,-1]") >> lookAt;

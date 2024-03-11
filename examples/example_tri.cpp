@@ -13,22 +13,34 @@
 #include "math/rand.h"
 
 #include "materials/diffuse.h"
+#include "materials/mirror.h"
+#include "materials/glass.h"
+
+#include "geometry/tri.h"
 
 #include "argh/argh.h"
+
+#include "pugixml/src/pugixml.hpp"
 
 int main(int argc,char ** argv){
 
     auto cmdl = argh::parser(argc, argv);
 
+    
     /* Viewing plane params */
     int w;
-    cmdl({"-w","--width"},256) >> w;
+    cmdl({"-w","--width"},600) >> w;
 
     int h;
-    cmdl({"-h","--height"},256) >> h;
+    cmdl({"-h","--height"},400) >> h;
 
     float focalLength;
     cmdl({"-f","--focal"},1.0f) >> focalLength;
+    std::cout << focalLength << std::endl;
+
+    float lensRadius;
+    cmdl({"-r","--radius"},0.0f) >> lensRadius;
+    std::cout << lensRadius << std::endl;
 
     /* Fov params */
     float vfov;
@@ -36,13 +48,14 @@ int main(int argc,char ** argv){
 
     //Samples per pixel (anti-aliasing)
     int spp;
-    cmdl("-spp",40) >> spp;
+    cmdl("-spp",1) >> spp;
     std::cout << spp << std::endl;
 
     /* Outfile param */
     std::string out_file{};
-    cmdl({"-o","--out"},"antialiasing.png") >> out_file;
+    cmdl({"-o","--out"},"example_tri.png") >> out_file;
     std::string filename = OUTPUT_DIR + out_file;
+
 
     /* Camera params */
 
@@ -65,34 +78,34 @@ int main(int argc,char ** argv){
     viewing_plane.focalLength = focalLength;
     viewing_plane.spp = spp;
  
-    cameras::PerspectiveCamera camera{viewing_plane,vfov,0.0f,lookFrom,lookAt};
+    cameras::PerspectiveCamera camera{viewing_plane,vfov,lensRadius,lookFrom,lookAt};
+
+    /* Materials */
+
 
 
     scene::Scene scene{};
 
+    /* Objects */
+
+
     auto blue_material = std::make_shared<materials::Diffuse>(math::Color3{0,0,1});
 
+    auto tri = std::make_shared<geometry::Tri>(math::Vec3{0,1,-3},math::Vec3{-1,-1,-3},math::Vec3{1,-1,-3},blue_material);
 
-    auto center = math::Vec3{0,0,-1};
-    auto sphere0 = std::make_shared<geometry::Sphere>(center,0.5f,blue_material);
-    center = math::Vec3{0.0f,-100.0f,0.0f};
-    auto sphere1 = std::make_shared<geometry::Sphere>(center,99.5f,blue_material);
-
-    scene.addObject(sphere0);
-    scene.addObject(sphere1);
-
-    math::Vec3 sphere_albedo{1.0,1.0,1.0};
+ 
+    scene.addObject(tri);
 
 
     lights::PointLight light{};
     light.position = math::Vec3{3,3,0};
-    light.intensity = math::Vec3{1,1,1}*40.0f;
+    light.intensity = math::Vec3{1,1,1}*30.0;
+
+    scene.addLight(light);
 
     for(int i = 0;i < h;i++){
         for(int j = 0;j < w;j++){
     
-
-           
             math::Color3 col{};
             for(int k = 0; k < spp;k++){
 
@@ -102,34 +115,12 @@ int main(int argc,char ** argv){
 
                 auto ray = camera.generateRay(j+dx,i+dy);
 
-                geometry::Hit hit{};
-                math::Color3 current_col{};
-                if(scene.trace(ray,hit)){
-
-                    auto l = (light.position - hit.point);
-                    float d = l.norm();
-
-
-                    math::Ray new_ray{hit.point,l}; 
-                    geometry::Hit new_hit{};
-
-
-                    bool in_shadow = scene.trace(new_ray,new_hit,0.001);
-                    
-                    if(!in_shadow){
-                        auto light_dir = l / d;
-                        current_col = sphere_albedo * light.intensity * std::max(0.0f,hit.normal.dot(light_dir));
-                        current_col /= (d*d * math::PI);
-                    }
-
-                    //col = (hit.normal + math::Vec3{1,1,1})*0.5;
-                }else{
-                    current_col = math::Color3{0,0,0};
-                }
+                auto current_col = scene.shade(ray);
 
                 col += current_col;
             }
             col /= spp;
+
 
             float r = std::max(0.0f,col.r());
             float g = std::max(0.0f,col.g());
@@ -137,9 +128,9 @@ int main(int argc,char ** argv){
 
 
             int idx = channels*(i*w + j);
-            pixels[idx] = r*256;
-            pixels[idx + 1] = g*256;
-            pixels[idx + 2] = b*256;
+            pixels[idx] = r*255.99;
+            pixels[idx + 1] = g*255.99;
+            pixels[idx + 2] = b*255.99;
         }
     }
 

@@ -33,6 +33,9 @@ endif()
 #   message(FATAL_ERROR "The glfw submodules was not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
 #endif()
 
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/external/pugixml/CMakeLists.txt")
+   message(FATAL_ERROR "The pugixml submodule was not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+endif()
 
 
 file(GLOB src
@@ -42,9 +45,11 @@ file(GLOB src
     "src/lights/*.cpp"
     "src/materials/*.cpp"
     "src/math/*.cpp"
+    "src/misc/*.cpp"
     "src/scene/*.cpp"
     "external/stb_image/stb_image.cpp"
     "external/stb_image/stb_image_write.cpp"
+    "external/tiny_obj/tiny_obj_loader.cpp"
 )
 
 
@@ -61,6 +66,10 @@ set(TEXTURE_DIR
     " \"${CMAKE_CURRENT_LIST_DIR}/assets/textures/\" "
 )
 
+set(SCENE_DIR 
+    " \"${CMAKE_CURRENT_LIST_DIR}/assets/scenes/\" "
+)
+
 set(OUTPUT_DIR 
     " \"${CMAKE_CURRENT_LIST_DIR}/output/\" "
 )
@@ -68,6 +77,7 @@ set(OUTPUT_DIR
 message("Using Asset directory: ${ASSET_DIR}")
 message("Using Model directory: ${MODEL_DIR}")
 message("Using Image directory: ${TEXTURE_DIR}")
+message("Using Scene directory: ${SCENE_DIR}")
 message("Using Output directory: ${OUTPUT_DIR}")
 
 
@@ -84,12 +94,26 @@ add_executable (
     ${src}
 )
 
+add_subdirectory(external/pugixml)
+
+
 
 target_include_directories(
     radiance
     PUBLIC external
     PUBLIC src
 )
+
+target_link_directories(
+	${PROJECT_NAME} 
+	PUBLIC external/pugixml
+)
+
+target_link_libraries(
+	${PROJECT_NAME}
+	pugixml
+)
+
 
 set_property(TARGET radiance PROPERTY CXX_STANDARD 17)
 

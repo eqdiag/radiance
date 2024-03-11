@@ -8,7 +8,7 @@ All dependencies are self-contained in this project using git's submodule system
 
 ## Dependencies
 - tiny_obj: Loading 3d model obj files
-- tiny_ply: Loading 3d model ply files
+- happly: Loading 3d model ply files
 - stb_image: Loading image files
 - tiny_exr: Loading HDR image files
 - pugixml: Parsing xml files for scene format
@@ -32,14 +32,14 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] defocus blur
 
 ### Assignment 2
-- [ ] triangle
-- [ ] tri mesh
+- [x] triangle
+- [x] tri mesh
+- [x] reading ply files
+
+- [ ] implement timer
 - [ ] parsing scene files
 - [ ] intersect axis-aligned bounding box
 - [ ] bounding volume hierarchy
-- [ ] implement timer
-- [ ] bvh optimizations
-- [ ] motion blur
 - [ ] object instancing
 
 ### Assignment 3
@@ -63,9 +63,21 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] rough dielecetric bsdgf
 - [ ] determnistic MIS
 
+## Minor cleanup
+-[ ] Tri mesh triangle intersection speed up
+    - creating too many tris + shared ptr copies
+    - determinant based intersection
+-[ ] Delete copy operators if ya don't need em
+-[ ] Make sure persp camera is always ortho
+-[ ] put everythning into radiance namespace
+-[ ] make radiance a lib so exmaples compile faster
+
 ### Bonus
 - [ ] replace random gen with PCG
 - [ ] parallel (openmp, not working on my mac :( )
+- [ ] motion blur
+- [ ] bvh optimizations
+
 
 
 ## Installation

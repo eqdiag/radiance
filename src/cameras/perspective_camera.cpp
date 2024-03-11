@@ -11,7 +11,7 @@ cameras::PerspectiveCamera::PerspectiveCamera(
     math::Vec3 lookAt,
     math::Vec3 up
 ):
-    _viewHeight{static_cast<float>(2.0 * plane.focalLength * tan(math::degToRad(vfov)*0.5))},
+    _viewHeight{static_cast<float>(2.0 * plane.focalLength * tan(math::degToRad(vfov)*0.5f))},
     _viewWidth{ _viewHeight * plane.aspectRatio},
     _lensRadius{lensRadius},
     _eye{lookFrom},
@@ -23,6 +23,7 @@ cameras::PerspectiveCamera::PerspectiveCamera(
     _topLeft{_eye + _front*plane.focalLength - _right*_viewWidth*0.5 + _up*_viewHeight*0.5},
     _topLeftPixelCenter{_topLeft + _dx*0.5 + _dy*0.5}
 {
+  
 
 }
 
