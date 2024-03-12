@@ -72,6 +72,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] put everythning into radiance namespace
 - [ ] make radiance a lib so exmaples compile faster
 - [ ] make sure dependencies all in readme
+- [ ] change scene function from shade to radiance
 
 ### Bonus
 - [ ] replace random gen with PCG
