@@ -61,7 +61,7 @@ int main(int argc,char ** argv){
     cameras::PerspectiveCamera camera{viewing_plane,vfov,0.0f,lookFrom,lookAt};
 
 
-    scene::Scene scene{};
+    radiance::scene::Scene scene{camera};
 
     auto blue_material = std::make_shared<materials::Diffuse>(math::Color3{0,0,1});
 

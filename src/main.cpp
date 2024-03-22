@@ -20,11 +20,13 @@
 
 #include "argh/argh.h"
 
-#include "pugixml/src/pugixml.hpp"
-
 #include "geometry/tri_mesh.h"
 
 #include "io/mesh.h"
+#include "io/scene.h"
+
+#include "misc/timer.h"
+
 
 int main(int argc,char ** argv){
 
@@ -55,6 +57,16 @@ int main(int argc,char ** argv){
     cmdl("-spp",1) >> spp;
     //std::cout << spp << std::endl;
 
+    /*Scene file param*/
+    std::string scene_file{};
+    cmdl({"-s","--scene"},"none") >> scene_file;
+    if(!strcmp(scene_file.c_str(),"none")){
+        std::cerr << "ERROR: No scene file specified\n";
+        return 0;
+    }
+    scene_file = SCENE_DIR + scene_file;
+
+
     /* Outfile param */
     std::string out_file{};
     cmdl({"-o","--out"},"out.png") >> out_file;
@@ -64,15 +76,14 @@ int main(int argc,char ** argv){
     /* Camera params */
 
     math::Vec3 lookFrom{};
-    cmdl("-lookfrom","[0,0,0]") >> lookFrom;
+    cmdl("-lookfrom","[0,0,4]") >> lookFrom;
 
     math::Vec3 lookAt{};
     cmdl("-lookAt","[0,0,-1]") >> lookAt;
 
     math::initRandom();
 
-    int channels = 3;
-    char pixels[w*h*channels];
+    /* Default Camera setup*/
 
 
     cameras::ViewingPlane viewing_plane{};
@@ -81,82 +92,40 @@ int main(int argc,char ** argv){
     viewing_plane.imageWidth = w;
     viewing_plane.focalLength = focalLength;
     viewing_plane.spp = spp;
+    viewing_plane.numChannels = 3;
  
     cameras::PerspectiveCamera camera{viewing_plane,vfov,lensRadius,lookFrom,lookAt};
 
-    /* Materials */
-    auto blue_material = std::make_shared<materials::Diffuse>(math::Color3{0,0,1});
-    auto red_material = std::make_shared<materials::Diffuse>(math::Color3{1,0,0});
+    /* Parse scene file*/
+
+    radiance::misc::Timer timer{"Scene parse"};
+
+    radiance::scene::Scene scene{camera};
+    radiance::io::SceneParser parser{};
 
 
-
-    scene::Scene scene{};
-
-    /* Objects */
-
-
-    std::string file = MODEL_DIR + std::string{"icosahedron.ply"};
-    //std::string file = MODEL_DIR + std::string{"oct.obj"};
-
-
-    auto mesh = std::make_shared<geometry::TriMesh>(red_material);
-
-    //Reading meshes example
-
-    if(!radiance::io::readTriMeshFromFile(*mesh,file.c_str(),radiance::io::MeshFileType::PLY)){
-        std::cerr << "ERR: Couldn't read mesh: " << file << std::endl;
-        abort();
+    timer.start();
+    if(parser.readSceneFromFile(scene,scene_file.c_str())){
+        std::cout << "Loaded scene file: " << scene_file << std::endl;
     }else{
-        std::cout << "Loaded mesh: " << file << std::endl;
+        std::cerr << "ERROR: Failed to load scene file: " << scene_file << std::endl;
+        return 0;
     }
 
+    scene.validate();
 
-    auto center = math::Vec3{0.0f,-100.0f,0.0f};
-    auto sphere1 = std::make_shared<geometry::Sphere>(center,99.5f,blue_material);
-
-    //auto mesh = std::make_shared<geometry::Tri>(math::Vec3{0,1,-3},math::Vec3{-1,-1,-3},math::Vec3{1,-1,-3},blue_material);
-
-    scene.addObject(mesh);
-   //scene.addObject(sphere1);
+    timer.end();
+    timer.displaySeconds();
 
 
-    lights::PointLight light{};
-    light.position = math::Vec3{3,3,0};
-    light.intensity = math::Vec3{1,1,1}*40.0f;
 
-    scene.addLight(light);
+   
+    //TODO FIX THIS!!!!!, use parsed values
+    int buffer_size = parser.getBufferSize();
+    char pixels[buffer_size];
 
-    for(int i = 0;i < h;i++){
-        for(int j = 0;j < w;j++){
+    scene.generateImageBuffer(pixels);
     
-            math::Color3 col{};
-            for(int k = 0; k < spp;k++){
-
-                float dx = math::randomFloat(-0.5,0.5f);
-                float dy = math::randomFloat(-0.5,0.5f);
-
-
-                auto ray = camera.generateRay(j+dx,i+dy);
-
-                auto current_col = scene.shade(ray);
-
-                col += current_col;
-            }
-            col /= spp;
-
-
-            float r = std::max(0.0f,col.r());
-            float g = std::max(0.0f,col.g());
-            float b = std::max(0.0f,col.b());
-
-
-            int idx = channels*(i*w + j);
-            pixels[idx] = r*255.99;
-            pixels[idx + 1] = g*255.99;
-            pixels[idx + 2] = b*255.99;
-        }
-        std::cout << "Rendered line: [" << i + 1<< "/" << h << "]\n"; 
-    }
 
     if(!radiance::io::writeBufferToRGB_PNG(pixels,w,h,filename.c_str())){
         std::cerr << "failed to write image: " << filename << std::endl;

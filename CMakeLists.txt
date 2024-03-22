@@ -115,7 +115,7 @@ target_link_libraries(
 )
 
 
-set_property(TARGET radiance PROPERTY CXX_STANDARD 17)
+set_property(TARGET radiance PROPERTY CXX_STANDARD 20)
 
 
 file(
@@ -150,8 +150,18 @@ foreach(EXAMPLE ${EXAMPLES})
         PUBLIC src
     )
 
+
+    target_link_directories(
+	    ${EXECUTABLE_NAME} 
+	    PUBLIC external/pugixml
+    )
+
+    target_link_libraries(
+	    ${EXECUTABLE_NAME}
+	    pugixml
+    )
   
-    set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 17)
+    set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 20)
 
 
 endforeach(EXAMPLE ${EXAMPLES})

@@ -26,5 +26,10 @@ namespace geometry{
     class Hittable{
         public:
             virtual bool trace(const math::Ray&,Hit&,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const = 0;
+            void setMaterial(std::shared_ptr<materials::Material> material);
+
+            std::shared_ptr<materials::Material> _material{};
+
+        protected:
     };
 }

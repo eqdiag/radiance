@@ -11,6 +11,7 @@ namespace cameras{
         int imageWidth;
         int imageHeight;
         int spp;
+        int numChannels;
     };
 
     class PerspectiveCamera{
@@ -28,7 +29,10 @@ namespace cameras{
             /* Coordinate system where (0,0) is top-left, (w,h) is bottom-right */
             math::Ray generateRay(float x,float y) const;
 
+            ViewingPlane viewingPlane{};
+
         private:
+
 
             float _viewHeight{};
             float _viewWidth{};

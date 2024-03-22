@@ -90,7 +90,7 @@ int main(int argc,char ** argv){
 
 
 
-    scene::Scene scene{};
+    radiance::scene::Scene scene{camera};
 
     /* Objects */
 

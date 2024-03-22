@@ -12,6 +12,7 @@ All dependencies are self-contained in this project using git's submodule system
 - stb_image: Loading image files
 - tiny_exr: Loading HDR image files
 - pugixml: Parsing xml files for scene format
+- argh: Command line parsing
 
 
 ## Features
@@ -36,11 +37,16 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] tri mesh
 - [x] reading ply files
 
-- [ ] implement timer
+- [x] implement timer
 - [ ] parsing scene files
+    - [ ] add obj loading
+    - [ ] add ply loading
+    - [ ] object parsing id to material + get it working on build + support inline materials
+
 - [ ] intersect axis-aligned bounding box
 - [ ] bounding volume hierarchy
-- [ ] object instancing
+- [ ] object instancing (hittable + transform)
+- [ ] aabb for transformed objects
 
 ### Assignment 3
 - [ ] textures
@@ -78,7 +84,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] parallel (openmp, not working on my mac :( )
 - [ ] motion blur
 - [ ] bvh optimizations
-
+- [ ] parse scene optional debug messages
 
 
 ## Installation

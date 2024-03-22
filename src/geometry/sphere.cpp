@@ -1,4 +1,12 @@
 #include "sphere.h"
+#include <cassert>
+
+geometry::Sphere::Sphere(math::Vec3 & center, float radius):
+    _center{center},
+    _radius{radius}
+{
+    
+}
 
 geometry::Sphere::Sphere(math::Vec3 &center, float radius,std::shared_ptr<materials::Material> material):
     _center{center},
@@ -29,6 +37,7 @@ bool geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax
         //Adjust so that normal always faces away from ray dir
         hit.setFaceNormal(ray.getDir(),normal);
         hit._material = _material;
+        assert(hit._material != nullptr);
         return true;
     }
     t = (-b + std::sqrt(discrim)) * 0.5;
@@ -39,6 +48,7 @@ bool geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax
         //Adjust so that normal always faces away from ray dir
         hit.setFaceNormal(ray.getDir(),normal);
         hit._material = _material;
+        assert(hit._material != nullptr);
         return true;
     }
 
