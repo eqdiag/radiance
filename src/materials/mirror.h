@@ -7,6 +7,7 @@ namespace materials{
     class Mirror: public Material{
         public:
             Mirror();
+            Mirror(math::Color3 albedo);
             bool bounce(
                 const math::Vec3& in,
                 const geometry::Hit& hit,
@@ -15,6 +16,6 @@ namespace materials{
                 ) const override;
 
         private:
-            float _albedo;
+            math::Color3 _albedo{};
     };
 }

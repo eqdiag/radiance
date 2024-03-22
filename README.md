@@ -39,9 +39,11 @@ All dependencies are self-contained in this project using git's submodule system
 
 - [x] implement timer
 - [ ] parsing scene files
+    - [x] inline materials
+    - [ ] optional parse printing (cli option)
     - [ ] add obj loading
     - [ ] add ply loading
-    - [ ] object parsing id to material + get it working on build + support inline materials
+- [ ] print render time
 
 - [ ] intersect axis-aligned bounding box
 - [ ] bounding volume hierarchy

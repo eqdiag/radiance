@@ -17,6 +17,7 @@ namespace cameras{
     class PerspectiveCamera{
         public:
             /* User responsibility to ensure frame is orthonormal */
+            PerspectiveCamera();
             PerspectiveCamera(
                 const ViewingPlane& plane,
                 float vfov = 90.0f,

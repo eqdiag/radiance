@@ -271,7 +271,7 @@ math::Vec3 math::Vec3::normalize() const {
 std::istream &math::operator>>(std::istream &in, Vec3 &v)
 {
 	char c;
-	in >> c;
+	//in >> c;
 	in >> v.data[0];
 	in >> c;
 	in >> v.data[1];

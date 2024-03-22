@@ -26,18 +26,18 @@ namespace radiance{
 
         struct HittableParams{
             std::shared_ptr<geometry::Hittable> object;
-            const char* materialId;
+            std::string materialId;
         };
 
         class SceneParser{
             public:
                 SceneParser();
-                bool readSceneFromFile(radiance::scene::Scene& scene,const char* fileName);  
+                bool readSceneFromFile(radiance::scene::Scene& scene,const char* fileName,bool debugMessages = false);  
 
-                int getBufferSize() const;
+                cameras::ViewingPlane getViewingPlane() const;
             private:
                 bool parseSceneSensorNode(radiance::scene::Scene& scene,pugi::xml_node& sensor_node);
-                bool parseSceneMaterialNode(radiance::scene::Scene& scene,pugi::xml_node& material_node);        
+                bool parseSceneMaterialNode(radiance::scene::Scene& scene,pugi::xml_node& material_node,std::string& materialName);        
                 bool parseSceneLightNode(radiance::scene::Scene& scene,pugi::xml_node& light_node);        
                 bool parseSceneGeometryNode(radiance::scene::Scene& scene,pugi::xml_node& geometry_node);    
                 bool parseSceneBackgroundNode(radiance::scene::Scene& scene,pugi::xml_node& bg_node);        
@@ -52,11 +52,14 @@ namespace radiance{
 
                 int _inlineMaterialCounter{0};
 
+
                 math::Color3 _backgroundColor{};
 
                 std::unordered_map<std::string,std::shared_ptr<materials::Material>> _materialMap{};
                 std::vector<lights::PointLight> _lights{};
                 std::vector<HittableParams> _objects{};
+
+                bool _debugMessages{false};
 
         };
 

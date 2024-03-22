@@ -17,8 +17,6 @@ namespace geometry{
         private:
             math::Vec3 _center{};
             float _radius{};
-
-            std::shared_ptr<materials::Material> _material{};
     };
 
 
