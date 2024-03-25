@@ -16,7 +16,7 @@ All dependencies are self-contained in this project using git's submodule system
 
 
 ## Features
-### Assignment 1
+### Feature set 1
 - [x] color gradient
 - [x] rays from cam
 - [x] sphere interesection
@@ -32,7 +32,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] glass
 - [x] defocus blur
 
-### Assignment 2
+### Feature set 2
 - [x] triangle
 - [x] tri mesh
 - [x] reading ply files
@@ -50,7 +50,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] object instancing (hittable + transform)
 - [ ] aabb for transformed objects
 
-### Assignment 3
+### Feature set 3
 - [ ] textures
 - [ ] shading normals
 - [ ] fresnel reflection
@@ -63,7 +63,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] better spherical light sampling
 - [ ] better triangle sampling
 
-### Assignment 4
+### Feature set 4
 - [ ] diffuse interreflection
 - [ ] non-diffuse 
 - [ ] russian roulette
@@ -87,7 +87,6 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] parallel (openmp, not working on my mac :( )
 - [ ] motion blur
 - [ ] bvh optimizations
-- [ ] parse scene optional debug messages
 
 
 ## Installation
