@@ -1,21 +1,22 @@
 #include "sphere.h"
 
-geometry::Sphere::Sphere(math::Vec3 & center, float radius):
+radiance::geometry::Sphere::Sphere(math::Vec3 & center, float radius):
     _center{center},
     _radius{radius}
 {
-    
+
 }
 
-geometry::Sphere::Sphere(math::Vec3 &center, float radius,std::shared_ptr<materials::Material> material):
+radiance::geometry::Sphere::Sphere(math::Vec3 &center, float radius,std::shared_ptr<materials::Material> material):
     _center{center},
     _radius{radius}
 {
     _material = material;
 }
 
-bool geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax) const 
+bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax) const 
 {
+
     auto dx = ray.getSrc() - _center;
 
     float a = 1.0;
@@ -50,3 +51,4 @@ bool geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax
 
     return false;
 }
+

@@ -3,25 +3,29 @@
 #include "geometry/hit.h"
 #include "materials/material.h"
 
-namespace geometry{
+namespace radiance{
 
-    class Tri: public Hittable{
-        public:
-            /* Vertices assumed in CCW order */
-            Tri(const math::Vec3& p0,const math::Vec3& p1,const math::Vec3& p2,std::shared_ptr<materials::Material> material);
+    namespace geometry{
 
-            bool trace(const math::Ray&,Hit&,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const;
+        class Tri: public Hittable{
+            public:
+                /* Vertices assumed in CCW order */
+                Tri(const math::Vec3& p0,const math::Vec3& p1,const math::Vec3& p2,std::shared_ptr<materials::Material> material);
 
-        private:
-            math::Vec3 _p0{};
-            math::Vec3 _p1{};
-            math::Vec3 _p2{};
-            math::Vec3 _p01{};
-            math::Vec3 _p12{};
-            math::Vec3 _p20{};
+                bool trace(const math::Ray&,Hit&,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
 
-            math::Vec3 _normal{};
+            private:
+                math::Vec3 _p0{};
+                math::Vec3 _p1{};
+                math::Vec3 _p2{};
+                math::Vec3 _p01{};
+                math::Vec3 _p12{};
+                math::Vec3 _p20{};
 
-            std::shared_ptr<materials::Material> _material{};
-    };
+                math::Vec3 _normal{};
+
+                std::shared_ptr<materials::Material> _material{};
+        };
+    }
+
 }

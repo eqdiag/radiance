@@ -184,8 +184,8 @@ math::Mat4 math::Mat4::fromRotateZAxis(float angle)
 
 math::Mat4 math::Mat4::fromAxisAngle(float angle, const Vec3& axis) 
 {
-	float c = cos(angle);
 	float s = sin(angle);
+	float c = sqrt(1 - s*s);
 	Vec3 u = axis.normalize();
 
 	float uxx = u.x() * u.x();
@@ -195,9 +195,13 @@ math::Mat4 math::Mat4::fromAxisAngle(float angle, const Vec3& axis)
 	float uyz = u.y() * u.z();
 	float uzz = u.z() * u.z();
 
-	//TODO: Fix
 
-	return Mat4{};
+	return Mat4{
+		Vec4{c + uxx*(1-c),uxy*(1-c) + u.z()*s,uxz*(1-c) - u.y()*s,0},
+		Vec4{uxy*(1-c) - u.z()*s,c + uyy*(1-c),uyz*(1-c) + u.x()*s,0},
+		Vec4{uxz*(1-c) + u.y()*s,uyz*(1-c)-u.x()*s,c + uzz*(1-c),0},
+		Vec4{0,0,0,1}
+	};
 }
 
 

@@ -8,7 +8,7 @@ materials::Glass::Glass(float indexOfRefraction):
 {
 }
 
-bool materials::Glass::bounce(const math::Vec3 &in, const geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const
+bool materials::Glass::bounce(const math::Vec3 &in, const radiance::geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const
 {
     attenuation = math::Vec3{1,1,1};
     float ratio = hit.outside ? 1.0 /_index : _index;

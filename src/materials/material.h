@@ -9,7 +9,7 @@ namespace materials{
         public:
             virtual bool bounce(
                 const math::Vec3& in,
-                const geometry::Hit& hit,
+                const radiance::geometry::Hit& hit,
                 math::Vec3& attenuation,
                 math::Vec3& out
                 ) const = 0;

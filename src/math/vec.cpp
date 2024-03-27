@@ -123,6 +123,16 @@ math::Vec2 math::Vec2::normalize() const {
 	return *this / norm();
 }
 
+math::Vec2 math::Vec2::min(const Vec2 &rhs)
+{
+    return Vec2(fmin(mX,rhs.x()),fmin(mY,rhs.y()));
+}
+
+math::Vec2 math::Vec2::max(const Vec2 &rhs)
+{
+    return Vec2(fmax(mX,rhs.x()),fmax(mY,rhs.y()));
+}
+
 std::ostream& math::operator<<(std::ostream& out, const Vec2& v)
 {
 	return out << "[" << v.x() << "," << v.y() << "]\n";
@@ -174,6 +184,21 @@ float& math::Vec3::operator[](size_t index)
 {
 	assert(index <= 3);
 	return data[index];
+}
+
+math::Vec2 math::Vec3::xy() const
+{
+    return math::Vec2{mX,mY};
+}
+
+math::Vec2 math::Vec3::xz() const
+{
+    return math::Vec2{mX,mZ};
+}
+
+math::Vec2 math::Vec3::yz() const
+{
+	return math::Vec2{mY,mZ};
 }
 
 /*Vector space operations*/
@@ -268,6 +293,16 @@ math::Vec3 math::Vec3::normalize() const {
 	return *this / norm();
 }
 
+math::Vec3 math::Vec3::min(const Vec3 &rhs)
+{
+	return Vec3(fmin(mX,rhs.x()),fmin(mY,rhs.y()),fmin(mZ,rhs.z()));
+}
+
+math::Vec3 math::Vec3::max(const Vec3 &rhs)
+{
+    return Vec3(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()));
+}
+
 std::istream &math::operator>>(std::istream &in, Vec3 &v)
 {
 	char c;
@@ -341,6 +376,10 @@ float& math::Vec4::operator[](size_t index) {
 	return data[index];
 }
 
+math::Vec3 math::Vec4::xyz() const
+{
+    return math::Vec3{mX,mY,mZ};
+}
 
 /*Vector space operations*/
 math::Vec4 math::Vec4::operator+(const Vec4& rhs) const {
@@ -427,6 +466,16 @@ float math::Vec4::norm() const {
 }
 math::Vec4 math::Vec4::normalize() const {
 	return *this / norm();
+}
+
+math::Vec4 math::Vec4::min(const Vec4 &rhs)
+{
+	return Vec4(fmin(mX,rhs.x()),fmin(mY,rhs.y()),fmin(mZ,rhs.z()),fmin(mW,rhs.w()));
+}
+
+math::Vec4 math::Vec4::max(const Vec4 &rhs)
+{
+    return Vec4(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()),fmax(mW,rhs.w()));
 }
 
 std::ostream& math::operator<<(std::ostream& out, const Vec4& v)

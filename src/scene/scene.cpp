@@ -3,17 +3,17 @@
 #include <optional>
 #include "math/util.h"
 #include "math/rand.h"
-#include <cassert>
 
 int radiance::scene::Scene::_maxDepth = 0;
 
-radiance::scene::Scene::Scene()
+radiance::scene::Scene::Scene(float dt):
+    _DT{dt}   
 {
     
 }
 
 radiance::scene::Scene::Scene(cameras::PerspectiveCamera &camera)
-    : _camera{camera}
+:_camera{camera}
 {
 
 }
@@ -31,7 +31,7 @@ void radiance::scene::Scene::generateImageBuffer(char *pixels) const
                 float dy = math::randomFloat(-0.5,0.5f);
 
                 auto ray = _camera.generateRay(j+dx,i+dy);
-                auto current_col = shade(ray,0);
+                auto current_col = radiance(ray,0);
 
 
                 col += current_col;
@@ -60,9 +60,10 @@ void radiance::scene::Scene::generateImageBuffer(char *pixels) const
         std::cout << std::flush;
        
     }
+    std::cout << "\n";
 }
 
-math::Color3 radiance::scene::Scene::shade(const math::Ray &ray,int depth) const
+math::Color3 radiance::scene::Scene::radiance(const math::Ray &ray,int depth) const
 {
     _maxDepth = (depth > _maxDepth) ? depth : _maxDepth;
 
@@ -72,22 +73,20 @@ math::Color3 radiance::scene::Scene::shade(const math::Ray &ray,int depth) const
 
     //Check if you hit something
     geometry::Hit hit{};
-    //std::cout << "before\n";
-    if(trace(ray,hit,0.01)){
+    
+    if(trace(ray,hit,_DT)){
         //Check if the material causes the ray to bounce
         math::Color3 attenuation{};
         math::Vec3 out_dir{};
         //If so, shade recursively
         if(hit._material->bounce(ray.getDir(),hit,attenuation,out_dir)){
             math::Ray bounce_ray{hit.point,out_dir};
-            return attenuation * shade(bounce_ray,depth+1);
+            return attenuation * radiance(bounce_ray,depth+1);
         }else{
         
         //Otherwise no bounce, so compute direct lighting... for now
             math::Color3 color{};
             for(const auto& light: _lights){
-
-                //std::cout << "l col: " << light.intensity << std::endl;
 
                 auto l = (light.position - hit.point);
                 float d = l.norm();
@@ -95,7 +94,7 @@ math::Color3 radiance::scene::Scene::shade(const math::Ray &ray,int depth) const
                 //Check if pt in shadow
                 math::Ray shadow_ray{hit.point,l};
                 geometry::Hit shadow_hit{};
-                bool some_hit = trace(shadow_ray,shadow_hit,0.001);
+                bool some_hit = trace(shadow_ray,shadow_hit,_DT);
 
                 bool in_shadow = some_hit && (shadow_hit.t < d);
 

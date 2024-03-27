@@ -45,6 +45,10 @@ namespace math {
 		float norm() const;
 		Vec2 normalize() const;
 
+		/*Componentwise min-max*/
+		Vec2 min(const Vec2& rhs);
+		Vec2 max(const Vec2& rhs);
+
 
 	private:
 		union {
@@ -74,6 +78,11 @@ namespace math {
 		float operator[](size_t index) const;
 		float& operator[](size_t index);
 
+		/*Some useful swizzle operators*/
+		math::Vec2 xy() const;
+		math::Vec2 xz() const;
+		math::Vec2 yz() const;
+
 
 		/*Vector space operations*/
 		Vec3 operator+(const Vec3& rhs) const;
@@ -98,6 +107,10 @@ namespace math {
 		float norm2() const;
 		float norm() const;
 		Vec3 normalize() const;
+
+		/*Componentwise min-max*/
+		Vec3 min(const Vec3& rhs);
+		Vec3 max(const Vec3& rhs);
 
 
 		friend std::istream& operator>>(std::istream& in, Vec3& v);
@@ -133,6 +146,9 @@ namespace math {
 		float operator[](size_t index) const;
 		float& operator[](size_t index);
 
+		/*Some useful swizzle operators*/
+		math::Vec3 xyz() const;
+
 
 		/*Vector space operations*/
 		Vec4 operator+(const Vec4& rhs) const;
@@ -156,6 +172,10 @@ namespace math {
 		float norm2() const;
 		float norm() const;
 		Vec4 normalize() const;
+
+		/*Componentwise min-max*/
+		Vec4 min(const Vec4& rhs);
+		Vec4 max(const Vec4& rhs);
 
 
 	private:

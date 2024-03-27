@@ -14,12 +14,12 @@ namespace radiance{
 
         class Scene: public geometry::Hittable{
             public:
-                Scene();
+                Scene(float dt);
                 Scene(cameras::PerspectiveCamera& camera);
 
                 void generateImageBuffer(char* pixels) const;
 
-                math::Color3 shade(const math::Ray& ray,int depth = 0) const;
+                math::Color3 radiance(const math::Ray& ray,int depth = 0) const;
                 bool trace(const math::Ray& ray,geometry::Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
 
                 math::Color3 backgroundColor(const math::Ray& ray) const;
@@ -36,6 +36,9 @@ namespace radiance{
                 int getMaxDepth() const;
 
             private:
+
+
+
                 std::vector<std::shared_ptr<geometry::Hittable>> _objects{};
                 std::vector<lights::PointLight> _lights{};
                 cameras::PerspectiveCamera _camera;
@@ -44,6 +47,9 @@ namespace radiance{
 
                 static int _maxDepth;
                 const int MAX_DEPTH = 400;
+
+            float _DT{0.01};
+
         };
     }
 

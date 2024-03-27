@@ -1,6 +1,8 @@
 #include "tri.h"
+#include "materials/diffuse.h"
+#include <memory>
 
-geometry::Tri::Tri(const math::Vec3 &p0, const math::Vec3 &p1, const math::Vec3 &p2,std::shared_ptr<materials::Material> material):
+radiance::geometry::Tri::Tri(const math::Vec3 &p0, const math::Vec3 &p1, const math::Vec3 &p2,std::shared_ptr<materials::Material> material):
     _p0{p0},
     _p1{p1},
     _p2{p2},
@@ -13,8 +15,10 @@ geometry::Tri::Tri(const math::Vec3 &p0, const math::Vec3 &p1, const math::Vec3 
 
 }
 
-bool geometry::Tri::trace(const math::Ray& ray,Hit& hit, float tmin, float tmax) const
+
+bool radiance::geometry::Tri::trace(const math::Ray &ray, Hit &hit, float tmin, float tmax) const
 {
+
     //First check for plane intersection
     float denom = ray.getDir().dot(_normal);
     if(std::abs(denom) < 0.0001) return false;
@@ -44,6 +48,7 @@ bool geometry::Tri::trace(const math::Ray& ray,Hit& hit, float tmin, float tmax)
     hit.point = q;
     hit.setFaceNormal(ray.getDir(),_normal);
     hit._material = _material;
+
 
     return true;
 }

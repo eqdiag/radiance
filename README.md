@@ -40,9 +40,10 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] implement timer
 - [ ] parsing scene files
     - [x] inline materials
-    - [ ] optional parse printing (cli option)
-    - [ ] add obj loading
-    - [ ] add ply loading
+    - [x] optional parse printing (cli option)
+    - [x] add obj loading
+    - [x] add ply loading
+    - [ ] add rectangle loading
 - [ ] print render time
 
 - [ ] intersect axis-aligned bounding box
@@ -86,6 +87,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] replace random gen with PCG
 - [ ] parallel (openmp, not working on my mac :( )
 - [ ] motion blur
+- [ ] add parsing for shape type "serialized"
 - [ ] bvh optimizations
 
 

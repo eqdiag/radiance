@@ -1,9 +1,18 @@
 #include "scene.h"
 #include <sstream>
 #include <string>
+#include <filesystem>
 
 #include "materials/diffuse.h"
 #include "materials/mirror.h"
+
+#include "io/mesh.h"
+
+#include "math/util.h"
+
+#include "geometry/hit.h"
+
+#include "misc/timer.h"
 
 radiance::io::SceneParser::SceneParser()
 {
@@ -21,6 +30,12 @@ radiance::io::SceneParser::SceneParser()
 
 bool radiance::io::SceneParser::readSceneFromFile(radiance::scene::Scene &scene, const char *fileName,bool debugMessages)
 {
+    //Keep file name and directory around
+    _fileName = fileName;
+    std::filesystem::path full(fileName);
+    full.remove_filename();
+    _fileDir = full.c_str();
+
     _debugMessages = debugMessages;
 
     pugi::xml_document doc{};
@@ -318,17 +333,69 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
 
     auto shape_type = geometry_node.attribute("type").value();
 
-    //Parse obj
-    if(!strcmp(shape_type,"obj")){
-        if(_debugMessages) std::cout << "\tPARSING OBJ\n";
+    //Parse obj/ply
+    if(!strcmp(shape_type,"obj") || !strcmp(shape_type,"ply")){
+        if(_debugMessages) std::cout << "\tPARSING MESH\n";
+
+        std::string material_name;
+
+        if(geometry_node.child("ref").empty()){
+            if(_debugMessages) std::cout << "\tPARSING INLINE MATERIAL\n";
+
+            auto material_node = geometry_node.child("bsdf");
+            if(material_node.empty()) return false;
+            
+            if(!parseSceneMaterialNode(scene,material_node,material_name)) return false;
+            
+
+        }else{
+            auto id_node = geometry_node.child("ref");
+            material_name = id_node.attribute("id").value();
+        }
+
+        auto filename_node = geometry_node.child("string");
+        auto name = filename_node.attribute("name").value();
+
+        if(filename_node.empty() || !name){
+            if(_debugMessages) std::cerr << "PARSE ERR: No filename node found for obj/ply file!\n";
+            return false;
+        }
+
+        auto filename = filename_node.attribute("value").value();
+        std::string full_path = std::string{_fileDir} + filename;
+
+        
+        auto mesh = std::make_shared<geometry::TriMesh>();
+        
+        if(!strcmp(shape_type,"obj")){
+            if(!io::readTriMeshFromObj(*mesh,full_path.c_str())){
+                if(_debugMessages) std::cerr << "PARSE ERR: Couldn't read obj file: " << full_path<< "\n";
+                return false;
+            }
+        }else if(!strcmp(shape_type,"ply")){
+            if(!io::readTriMeshFromPly(*mesh,full_path.c_str())){
+                if(_debugMessages) std::cerr << "PARSE ERR: Couldn't read ply file: " << full_path<< "\n";
+                return false;
+            }
+        }
+
+        if(_debugMessages) std::cout << "SUCCESS: Read file " << full_path << " into a mesh!\n";
+
+        auto transform_node = geometry_node.child("transform");
+        if(transform_node){
+            math::Transform transform{};
+            if(!parseSceneTransformNode(scene,transform_node,transform)) return false;
+            
+            auto instance = std::make_shared<geometry::InstancedHittable>(mesh,transform);
+
+            _objects.emplace_back(HittableParams{instance,material_name});
+
+        }else{
+            _objects.emplace_back(HittableParams{mesh,material_name});
+        }
 
 
-    //Parse ply
-    }else if(!strcmp(shape_type,"ply")){
-        if(_debugMessages) std::cout << "\tPARSING PLY\n";
 
-
-    //Parse sphere
     }else if(!strcmp(shape_type,"sphere")){
         auto point_node = geometry_node.child("point");
         auto radius_node = geometry_node.child("float");
@@ -336,7 +403,6 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
         std::string material_name;
 
         if(geometry_node.child("ref").empty()){
-            //std::cout << "PARSE ERR: Don't support inline materials yet!\n";
             if(_debugMessages) std::cout << "\tPARSING INLINE MATERIAL\n";
 
             auto material_node = geometry_node.child("bsdf");
@@ -386,6 +452,80 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
     return true;
 }
 
+bool radiance::io::SceneParser::parseSceneTransformNode(radiance::scene::Scene &scene, pugi::xml_node &transform_node, math::Transform &transform)
+{
+    if(_debugMessages) std::cout << "PARSING TRANSFORM NODE\n";
+
+    auto name = transform_node.attribute("name").value();
+
+    if(strcmp(name,"toWorld")) return false;
+
+    //auto scale_node = transform_node.child("scale");
+
+    for(const auto& child_node: transform_node.children()){
+        auto child_name = child_node.name();
+
+        if(!strcmp(child_name,"scale")){
+            float x = 1;
+            float y = 1;
+            float z = 1;
+            auto x_node = child_node.attribute("x");
+            if(x_node) x = std::stof(x_node.value());
+            
+            auto y_node = child_node.attribute("y");
+            if(y_node) y = std::stof(y_node.value());
+
+            auto z_node = child_node.attribute("z");
+            if(z_node) z = std::stof(z_node.value());
+
+            math::Vec3 scale{x,y,z};
+            transform.scale(scale);
+            if(_debugMessages) std::cout << "\tSCALE: " << scale << std::endl;
+        }else if(!strcmp(child_name,"translate")){
+
+            float x = 0;
+            float y = 0;
+            float z = 0;
+            auto x_node = child_node.attribute("x");
+            if(x_node) x = std::stof(x_node.value());
+            
+            auto y_node = child_node.attribute("y");
+            if(y_node) y = std::stof(y_node.value());
+
+            auto z_node = child_node.attribute("z");
+            if(z_node) z = std::stof(z_node.value());
+
+            math::Vec3 translate{x,y,z};
+            transform.translate(translate);
+            if(_debugMessages) std::cout << "\tTRANSLATE: " << translate << std::endl;
+        }else if(!strcmp(child_name,"rotate")){
+
+            float x = 0;
+            float y = 0;
+            float z = 0;
+            float angle_degrees = 0;
+            auto x_node = child_node.attribute("x");
+            if(x_node) x = std::stof(x_node.value());
+            
+            auto y_node = child_node.attribute("y");
+            if(y_node) y = std::stof(y_node.value());
+
+            auto z_node = child_node.attribute("z");
+            if(z_node) z = std::stof(z_node.value());
+
+             auto angle_node = child_node.attribute("angle");
+            if(angle_node) angle_degrees = std::stof(angle_node.value());
+    
+            math::Vec3 axis{x,y,z};
+            transform.rotate(math::degToRad(angle_degrees),axis);
+            if(_debugMessages) std::cout << "\tAXIS: " << axis << "\n\tANGLE: " << angle_degrees << std::endl;
+        }
+    }
+
+
+    return true;
+}
+
 bool radiance::io::SceneParser::parseSceneBackgroundNode(radiance::scene::Scene &scene, pugi::xml_node &bg_node)
 {
     if(_debugMessages) std::cout << "PARSING BACKGROUND\n";
@@ -398,9 +538,11 @@ bool radiance::io::SceneParser::parseSceneBackgroundNode(radiance::scene::Scene 
     std::istringstream s(value);
     s >> _backgroundColor;
     if(_debugMessages) std::cout << "\tCOLOR: " << _backgroundColor;
+    _backgroundSet = true;
 
     return true;
 }
+
 
 bool radiance::io::SceneParser::build(radiance::scene::Scene &scene)
 {
@@ -435,6 +577,10 @@ bool radiance::io::SceneParser::build(radiance::scene::Scene &scene)
         scene.addLight(light);
     }   
 
+    //Set background
+    if(_backgroundSet){
+        scene.setBackgroundColor(_backgroundColor);
+    }
 
     return true;
 }

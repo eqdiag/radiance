@@ -9,7 +9,7 @@
 		<float name="fov" value="39.3077"/>
 
 		<sampler type="independent">
-			<integer name="sampleCount" value="64"/>
+			<integer name="sampleCount" value="4"/>
 		</sampler>
 
 		<film type="hdrfilm">

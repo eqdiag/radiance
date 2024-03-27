@@ -27,8 +27,15 @@
 
 #include "misc/timer.h"
 
+#include "math/transform.h"
+
+#include <chrono>
+#include <filesystem>
+#include <thread>
+#include <omp.h>
 
 int main(int argc,char ** argv){
+
 
     auto cmdl = argh::parser(argc, argv);
 
@@ -44,34 +51,31 @@ int main(int argc,char ** argv){
         return 0;
         
     }
+    std::filesystem::path default_out_path = scene_file;
     scene_file = SCENE_DIR + scene_file;
 
 
-    
-
     /* Outfile param */
+    default_out_path.replace_extension(".png");
+    default_out_path = default_out_path.filename();
     std::string out_file{};
-    cmdl({"-o","--out"},"out.png") >> out_file;
+    cmdl({"-o","--out"},default_out_path.c_str()) >> out_file;
     std::string filename = OUTPUT_DIR + out_file;
-
-
 
 
     math::initRandom();
 
-    
-
- 
 
     /* Parse scene file*/
 
-    radiance::misc::Timer timer{"Scene parse"};
 
-    radiance::scene::Scene scene{};
+    //Pass in ray offset, is scene dependent
+    radiance::scene::Scene scene{.1};
     radiance::io::SceneParser parser{};
 
-
+    radiance::misc::Timer timer{"Scene parse"};
     timer.start();
+
     if(parser.readSceneFromFile(scene,scene_file.c_str(),debug)){
         std::cout << "Loaded scene file: " << scene_file << std::endl;
     }else{
@@ -79,9 +83,10 @@ int main(int argc,char ** argv){
         return 0;
     }
 
+ 
     timer.end();
     timer.displaySeconds();
-
+    
     do{
         std::cout << "Press enter to render scene...\n";
     }while(std::cin.get() != '\n');
@@ -94,7 +99,12 @@ int main(int argc,char ** argv){
 
     int buffer_size = w * h * num_channels;
     char pixels[buffer_size];
+    timer.setName("Render");
+
+    timer.start();
     scene.generateImageBuffer(pixels);
+    timer.end();
+    timer.displaySeconds();
 
     if(!radiance::io::writeBufferToRGB_PNG(pixels,w,h,filename.c_str())){
         std::cerr << "\n Failed to write image: " << filename << std::endl;

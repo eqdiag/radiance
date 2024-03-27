@@ -75,9 +75,9 @@ int main(int argc,char ** argv){
 
 
     auto center = math::Vec3{0,0,-1};
-    auto sphere0 = std::make_shared<geometry::Sphere>(center,0.5f,blue_material);
+    auto sphere0 = std::make_shared<radiance::geometry::Sphere>(center,0.5f,blue_material);
     center = math::Vec3{0.0f,-100.0f,0.0f};
-    auto sphere1 = std::make_shared<geometry::Sphere>(center,99.5f,blue_material);
+    auto sphere1 = std::make_shared<radigeometry::Sphere>(center,99.5f,blue_material);
 
     scene.addObject(sphere0);
     scene.addObject(sphere1);

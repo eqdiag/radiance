@@ -11,7 +11,7 @@ materials::Mirror::Mirror(math::Color3 albedo) : _albedo{albedo}
 {
 }
 
-bool materials::Mirror::bounce(const math::Vec3 &in, const geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const
+bool materials::Mirror::bounce(const math::Vec3 &in, const radiance::geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const
 {
     attenuation = _albedo;
     out = math::reflect(in,hit.normal);

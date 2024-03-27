@@ -38,7 +38,10 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/external/pugixml/CMakeLists.txt")
 endif()
 
 
+
+
 file(GLOB src
+    "src/acceleration/*.cpp"
     "src/cameras/*.cpp"
     "src/geometry/*.cpp"
     "src/io/*.cpp"
@@ -130,41 +133,41 @@ set(
     "${CMAKE_CURRENT_LIST_DIR}/build/examples"
 )
 
-foreach(EXAMPLE ${EXAMPLES})
+#foreach(EXAMPLE ${EXAMPLES})
 
-    get_filename_component(EXECUTABLE_NAME ${EXAMPLE} NAME_WE)
+#    get_filename_component(EXECUTABLE_NAME ${EXAMPLE} NAME_WE)
 
-    message("Building ${EXECUTABLE_NAME}")
+#    message("Building ${EXECUTABLE_NAME}")
 
     #add_executable(${EXECUTABLE_NAME} ${SOURCE_PATH})
-    add_executable (
-        ${EXECUTABLE_NAME}
-        ${EXAMPLE}
-        ${src}
-    )
+#    add_executable (
+#        ${EXECUTABLE_NAME}
+#        ${EXAMPLE}
+#        ${src}
+#    )
 
    
-    target_include_directories(
-        ${EXECUTABLE_NAME}
-        PUBLIC external
-        PUBLIC src
-    )
+#    target_include_directories(
+#        ${EXECUTABLE_NAME}
+#        PUBLIC external
+#        PUBLIC src
+#    )
 
 
-    target_link_directories(
-	    ${EXECUTABLE_NAME} 
-	    PUBLIC external/pugixml
-    )
+#    target_link_directories(
+#	    ${EXECUTABLE_NAME} 
+#	    PUBLIC external/pugixml
+#    )
 
-    target_link_libraries(
-	    ${EXECUTABLE_NAME}
-	    pugixml
-    )
+#    target_link_libraries(
+#	    ${EXECUTABLE_NAME}
+#	    pugixml
+#    )
   
-    set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 20)
+#    set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD 20)
 
 
-endforeach(EXAMPLE ${EXAMPLES})
+#endforeach(EXAMPLE ${EXAMPLES})
 
 
 
