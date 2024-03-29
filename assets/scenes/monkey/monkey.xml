@@ -9,7 +9,7 @@
 		<float name="fov" value="45"/>
 
 		<sampler type="independent">
-			<integer name="sampleCount" value="16"/>
+			<integer name="sampleCount" value="64"/>
 		</sampler>
 
 		<film type="hdrfilm">
@@ -45,6 +45,7 @@
 	<shape type="obj">
 	    <string name="filename" value="monkey.obj"/>
         <transform name="toWorld">
+            <scale x="1" y="0.5" z="1"/>
             <rotate angle="45" y="1"/>
 			<translate x="0" y="0.5" z="-5"/>
 		</transform>

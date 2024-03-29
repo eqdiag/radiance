@@ -46,8 +46,8 @@ namespace math {
 		Vec2 normalize() const;
 
 		/*Componentwise min-max*/
-		Vec2 min(const Vec2& rhs);
-		Vec2 max(const Vec2& rhs);
+		Vec2 min(const Vec2& rhs) const;
+		Vec2 max(const Vec2& rhs) const;
 
 
 	private:
@@ -109,8 +109,8 @@ namespace math {
 		Vec3 normalize() const;
 
 		/*Componentwise min-max*/
-		Vec3 min(const Vec3& rhs);
-		Vec3 max(const Vec3& rhs);
+		Vec3 min(const Vec3& rhs) const;
+		Vec3 max(const Vec3& rhs) const;
 
 
 		friend std::istream& operator>>(std::istream& in, Vec3& v);
@@ -174,8 +174,8 @@ namespace math {
 		Vec4 normalize() const;
 
 		/*Componentwise min-max*/
-		Vec4 min(const Vec4& rhs);
-		Vec4 max(const Vec4& rhs);
+		Vec4 min(const Vec4& rhs) const;
+		Vec4 max(const Vec4& rhs) const;
 
 
 	private:

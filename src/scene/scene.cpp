@@ -63,6 +63,17 @@ void radiance::scene::Scene::generateImageBuffer(char *pixels) const
     std::cout << "\n";
 }
 
+void radiance::scene::Scene::computeBoundingBox()
+{
+    for(const auto& obj: _objects){
+        radiance::geometry::AABB box{};
+        if(obj->getBoundingBox(box)){
+            _box = _box.merge(box);
+        }
+    }
+
+}
+
 math::Color3 radiance::scene::Scene::radiance(const math::Ray &ray,int depth) const
 {
     _maxDepth = (depth > _maxDepth) ? depth : _maxDepth;
@@ -142,6 +153,12 @@ bool radiance::scene::Scene::trace(const math::Ray &ray, geometry::Hit &hit, flo
     }
 
     return hit_found;
+}
+
+bool radiance::scene::Scene::getBoundingBox(radiance::geometry::AABB &box) const
+{
+    box = _box;
+    return true;
 }
 
 math::Color3 radiance::scene::Scene::backgroundColor(const math::Ray &ray) const

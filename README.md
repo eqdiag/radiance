@@ -38,18 +38,21 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] reading ply files
 
 - [x] implement timer
-- [ ] parsing scene files
+- [x] parsing scene files
     - [x] inline materials
     - [x] optional parse printing (cli option)
     - [x] add obj loading
     - [x] add ply loading
     - [ ] add rectangle loading
-- [ ] print render time
+- [x] print render time
 
-- [ ] intersect axis-aligned bounding box
-- [ ] bounding volume hierarchy
-- [ ] object instancing (hittable + transform)
-- [ ] aabb for transformed objects
+- [x] intersect axis-aligned bounding box
+- [x] bounding volume hierarchy
+- [x] object instancing (hittable + transform)
+- [x] aabb for transformed objects
+
+- [ ] get rectangles working
+- [ ] make sure transformations are working w tri meshes (eg bunny examples)
 
 ### Feature set 3
 - [ ] textures
@@ -89,6 +92,8 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] motion blur
 - [ ] add parsing for shape type "serialized"
 - [ ] bvh optimizations
+- [ ] add ply files (currently loader is broken :/)
+- [ ] caching file names so i don't load them multiple times
 
 
 ## Installation

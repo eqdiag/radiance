@@ -4,7 +4,7 @@ radiance::geometry::Sphere::Sphere(math::Vec3 & center, float radius):
     _center{center},
     _radius{radius}
 {
-
+    computeBoundingBox();
 }
 
 radiance::geometry::Sphere::Sphere(math::Vec3 &center, float radius,std::shared_ptr<materials::Material> material):
@@ -12,6 +12,15 @@ radiance::geometry::Sphere::Sphere(math::Vec3 &center, float radius,std::shared_
     _radius{radius}
 {
     _material = material;
+    computeBoundingBox();
+}
+
+void radiance::geometry::Sphere::computeBoundingBox()
+{
+    _box = radiance::geometry::AABB{
+        _center - math::Vec3{_radius,_radius,_radius},
+        _center + math::Vec3{_radius,_radius,_radius},
+    };
 }
 
 bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax) const 
@@ -49,6 +58,12 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,
         return true;
     }
 
+    return false;
+}
+
+bool radiance::geometry::Sphere::getBoundingBox(radiance::geometry::AABB &box) const
+{
+    box = _box;
     return false;
 }
 

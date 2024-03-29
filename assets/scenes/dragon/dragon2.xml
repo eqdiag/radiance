@@ -13,8 +13,8 @@
 		</sampler>
 
 		<film type="hdrfilm">
-			<integer name="width" value="512"/>
-			<integer name="height" value="512"/>
+			<integer name="width" value="200"/>
+			<integer name="height" value="200"/>
 		</film>
 	</sensor>
 
@@ -47,14 +47,14 @@
         <point name="position" x="278" y="548" z="120"/>
 	</emitter>
 
-	<shape type="ply">
+	<shape type="obj">
 		<transform name="toWorld">
 			<scale x="300" y="300" z="300"/>
 			<rotate angle="40" y="1"/>
 			<translate x="250" y="75" z="250"/>
 		</transform>
 
-	    <string name="filename" value="dragon.ply"/>
+	    <string name="filename" value="dragon.obj"/>
 		<ref id="gold"/>
 	</shape>
 

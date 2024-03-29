@@ -12,7 +12,11 @@ namespace radiance{
                 /* Vertices assumed in CCW order */
                 Tri(const math::Vec3& p0,const math::Vec3& p1,const math::Vec3& p2,std::shared_ptr<materials::Material> material);
 
+                void computeBoundingBox();
+
                 bool trace(const math::Ray&,Hit&,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
+                bool getBoundingBox(radiance::geometry::AABB& box) const override;
+
 
             private:
                 math::Vec3 _p0{};
@@ -25,6 +29,8 @@ namespace radiance{
                 math::Vec3 _normal{};
 
                 std::shared_ptr<materials::Material> _material{};
+
+                geometry::AABB _box{};
         };
     }
 

@@ -19,8 +19,11 @@ namespace radiance{
 
                 void generateImageBuffer(char* pixels) const;
 
+                void computeBoundingBox();
+
                 math::Color3 radiance(const math::Ray& ray,int depth = 0) const;
                 bool trace(const math::Ray& ray,geometry::Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
+                bool getBoundingBox(radiance::geometry::AABB& box) const override;
 
                 math::Color3 backgroundColor(const math::Ray& ray) const;
 
@@ -44,6 +47,8 @@ namespace radiance{
                 cameras::PerspectiveCamera _camera;
 
                 std::optional<math::Color3> _backgroundColor{};
+
+                radiance::geometry::AABB _box{};
 
                 static int _maxDepth;
                 const int MAX_DEPTH = 400;

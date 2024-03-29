@@ -123,12 +123,12 @@ math::Vec2 math::Vec2::normalize() const {
 	return *this / norm();
 }
 
-math::Vec2 math::Vec2::min(const Vec2 &rhs)
+math::Vec2 math::Vec2::min(const Vec2 &rhs) const
 {
     return Vec2(fmin(mX,rhs.x()),fmin(mY,rhs.y()));
 }
 
-math::Vec2 math::Vec2::max(const Vec2 &rhs)
+math::Vec2 math::Vec2::max(const Vec2 &rhs) const
 {
     return Vec2(fmax(mX,rhs.x()),fmax(mY,rhs.y()));
 }
@@ -293,12 +293,12 @@ math::Vec3 math::Vec3::normalize() const {
 	return *this / norm();
 }
 
-math::Vec3 math::Vec3::min(const Vec3 &rhs)
+math::Vec3 math::Vec3::min(const Vec3 &rhs) const
 {
 	return Vec3(fmin(mX,rhs.x()),fmin(mY,rhs.y()),fmin(mZ,rhs.z()));
 }
 
-math::Vec3 math::Vec3::max(const Vec3 &rhs)
+math::Vec3 math::Vec3::max(const Vec3 &rhs) const
 {
     return Vec3(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()));
 }
@@ -468,12 +468,12 @@ math::Vec4 math::Vec4::normalize() const {
 	return *this / norm();
 }
 
-math::Vec4 math::Vec4::min(const Vec4 &rhs)
+math::Vec4 math::Vec4::min(const Vec4 &rhs) const
 {
 	return Vec4(fmin(mX,rhs.x()),fmin(mY,rhs.y()),fmin(mZ,rhs.z()),fmin(mW,rhs.w()));
 }
 
-math::Vec4 math::Vec4::max(const Vec4 &rhs)
+math::Vec4 math::Vec4::max(const Vec4 &rhs) const
 {
     return Vec4(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()),fmax(mW,rhs.w()));
 }

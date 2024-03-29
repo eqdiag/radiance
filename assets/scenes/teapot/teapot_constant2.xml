@@ -26,7 +26,6 @@
 		<rgb name="reflectance" value="1, 1, 1"/>
 	</bsdf>
 
-    
 	<emitter type="point">
         <rgb name="intensity" value="5000000, 4000000, 3000000"/>
         <point name="position" x="500" y="1000" z="0"/>
@@ -47,9 +46,11 @@
 		<ref id="green"/>
 	</shape>
 
-    <shape type="sphere">
-	    <point name="center" x="0" y="-100.5" z="3"/>
-	    <float name="radius" value="100.0"/>
-		<ref id="gray"/>
+	<shape type="rectangle">
+		<transform name="toWorld">
+			<scale x="2000" y="2000" z="2000"/>
+			<rotate angle="90" x="1"/>
+		</transform>
+		<ref id="green"/>
 	</shape>
 </scene>

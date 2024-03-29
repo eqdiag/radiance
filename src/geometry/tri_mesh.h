@@ -3,6 +3,9 @@
 #include "geometry/hit.h"
 #include "math/vec.h"
 
+#include "geometry/aabb.h"
+#include "acceleration/bvh.h"
+
 #include <vector>
 
 namespace radiance{
@@ -14,13 +17,20 @@ namespace radiance{
             public:
                 TriMesh();
                 TriMesh(std::shared_ptr<materials::Material> material);
+                TriMesh(std::vector<math::Vec3>&& vertices,std::vector<uint32_t>&& indices);
                 TriMesh(std::vector<math::Vec3>&& vertices,std::vector<uint32_t>&& indices,std::shared_ptr<materials::Material> material);
 
                 void setVertices(std::vector<math::Vec3>&& vertices);
                 void setIndices(std::vector<uint32_t>&& indices);
 
 
+                void computeBoundingBox();
+
+                std::shared_ptr<acceleration::BVHNode> generateBVH();
+
                 bool trace(const math::Ray& ray,Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
+                bool getBoundingBox(radiance::geometry::AABB& box) const override;
+                std::optional<std::vector<std::shared_ptr<geometry::Hittable>>> getPrimitives(const math::Transform& transform = math::Transform{}) override;
 
 
                 std::shared_ptr<materials::Material> getMaterial();
@@ -31,6 +41,8 @@ namespace radiance{
                 std::vector<math::Vec3> _vertices{};
                 std::vector<uint32_t> _indices{};
                 uint32_t _numFaces{};
+
+                radiance::geometry::AABB _box{};
         };
 
     }

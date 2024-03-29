@@ -32,7 +32,6 @@
 #include <chrono>
 #include <filesystem>
 #include <thread>
-#include <omp.h>
 
 int main(int argc,char ** argv){
 

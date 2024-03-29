@@ -9,7 +9,7 @@
 		<float name="fov" value="45"/>
 
 		<sampler type="independent">
-			<integer name="sampleCount" value="1"/>
+			<integer name="sampleCount" value="16"/>
 		</sampler>
 
 		<film type="hdrfilm">
@@ -40,22 +40,30 @@
         <point name="position" x="0" y="3" z="4"/>
 	</emitter>
 
-	<shape type="ply">
+	<shape type="obj">
 		<transform name="toWorld">
 			<rotate angle="30" y="1"/>
 			<translate x="1.5" y="-0.5"/>
 		</transform>
-	    <string name="filename" value="bunny.ply"/>
+	    <string name="filename" value="bunny.obj"/>
 		<ref id="green"/>
 	</shape>
 
-	<shape type="ply">
+	<shape type="obj">
 		<transform name="toWorld">
 			<rotate angle="120" y="1"/>
 			<translate x="-1.5" y="-0.5"/>
 		</transform>
-	    <string name="filename" value="bunny.ply"/>
+	    <string name="filename" value="bunny.obj"/>
 		<ref id="blue"/>
 	</shape>
 
+	<shape type="rectangle">
+		<transform name="toWorld">
+			<rotate angle="90" x="1"/>
+			<translate y="-0.5"/>
+			<scale x="2000" y="1" z="2000"/>
+		</transform>
+		<ref id="gray"/>
+	</shape>
 </scene>

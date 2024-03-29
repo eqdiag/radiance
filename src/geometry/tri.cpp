@@ -1,6 +1,7 @@
 #include "tri.h"
 #include "materials/diffuse.h"
 #include <memory>
+#include <vector>
 
 radiance::geometry::Tri::Tri(const math::Vec3 &p0, const math::Vec3 &p1, const math::Vec3 &p2,std::shared_ptr<materials::Material> material):
     _p0{p0},
@@ -12,9 +13,16 @@ radiance::geometry::Tri::Tri(const math::Vec3 &p0, const math::Vec3 &p1, const m
     _normal{(p1 - p0).cross(p2 - p0).normalize()},
     _material{material}
 {
-
+    computeBoundingBox();
 }
 
+void radiance::geometry::Tri::computeBoundingBox()
+{
+    _box = radiance::geometry::AABB{
+        _p0.min(_p1).min(_p2),
+        _p0.max(_p1).max(_p2)
+    };
+}
 
 bool radiance::geometry::Tri::trace(const math::Ray &ray, Hit &hit, float tmin, float tmax) const
 {
@@ -52,3 +60,10 @@ bool radiance::geometry::Tri::trace(const math::Ray &ray, Hit &hit, float tmin, 
 
     return true;
 }
+
+bool radiance::geometry::Tri::getBoundingBox(radiance::geometry::AABB &box) const
+{
+    box = _box;
+    return true;
+}
+

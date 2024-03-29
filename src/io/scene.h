@@ -4,6 +4,7 @@
 #include "geometry/hit.h"
 #include "materials/material.h"
 #include "cameras/perspective_camera.h"
+#include "geometry/tri_mesh.h"
 
 #include "pugixml/src/pugixml.hpp"
 

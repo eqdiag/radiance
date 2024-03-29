@@ -11,8 +11,13 @@
 #include "math/util.h"
 
 #include "geometry/hit.h"
+#include "geometry/tri.h"
 
 #include "misc/timer.h"
+
+#include "acceleration/bvh.h"
+
+#include <cassert>
 
 radiance::io::SceneParser::SceneParser()
 {
@@ -386,13 +391,20 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
             math::Transform transform{};
             if(!parseSceneTransformNode(scene,transform_node,transform)) return false;
             
+            //if(_debugMessages) std::cerr << "PARSE ERR: BVH instancing...scary: " << full_path<< "\n";
+            //return false;
+
             auto instance = std::make_shared<geometry::InstancedHittable>(mesh,transform);
 
             _objects.emplace_back(HittableParams{instance,material_name});
 
         }else{
+        
+
             _objects.emplace_back(HittableParams{mesh,material_name});
         }
+        if(_debugMessages) std::cout <<"\tMATERIAL ID: " << material_name << std::endl;
+
 
 
 
@@ -439,8 +451,58 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
 
 
     //Parse rect
-    }else if(!strcmp(shape_type,"rect")){
+    }else if(!strcmp(shape_type,"rectangle")){
         if(_debugMessages) std::cout << "\tPARSING RECT\n";
+
+        std::string material_name;
+
+        if(geometry_node.child("ref").empty()){
+            if(_debugMessages) std::cout << "\tPARSING INLINE MATERIAL\n";
+
+            auto material_node = geometry_node.child("bsdf");
+            if(material_node.empty()) return false;
+            
+            if(!parseSceneMaterialNode(scene,material_node,material_name)) return false;
+            
+
+        }else{
+            auto id_node = geometry_node.child("ref");
+            material_name = id_node.attribute("id").value();
+        }
+
+        std::vector<math::Vec3> vertices = {
+            math::Vec3{-1,-1,0},
+            math::Vec3{1,-1,0},
+            math::Vec3{1,1,0},
+            math::Vec3{-1,1,0}
+        };
+        std::vector<uint32_t> indices = {
+            0,1,2,
+            0,2,3
+        };
+
+        auto mesh = std::make_shared<geometry::TriMesh>(std::move(vertices),std::move(indices));
+
+
+        auto transform_node = geometry_node.child("transform");
+        if(transform_node){
+            math::Transform transform{};
+            if(!parseSceneTransformNode(scene,transform_node,transform)) return false;
+            
+            //if(_debugMessages) std::cerr << "PARSE ERR: BVH instancing...scary: " << full_path<< "\n";
+            //return false;
+
+            auto instance = std::make_shared<geometry::InstancedHittable>(mesh,transform);
+
+            _objects.emplace_back(HittableParams{instance,material_name});
+
+        }else{
+        
+
+            _objects.emplace_back(HittableParams{mesh,material_name});
+        }
+        if(_debugMessages) std::cout <<"\t\tMATERIAL ID: " << material_name << std::endl;
+
 
     }else{
 
@@ -563,14 +625,30 @@ bool radiance::io::SceneParser::build(radiance::scene::Scene &scene)
     //Set camera
     scene.setCamera(camera);
 
-   
+
     //Set geometry materials
     for(auto& obj: _objects){
         auto id = obj.materialId;
         if(!_materialMap.contains(id)) return false;
         obj.object->setMaterial(_materialMap[id]);
-        scene.addObject(obj.object);
+
+        auto obj_primitives = obj.object->getPrimitives();
+
+        if(obj_primitives.has_value()){
+            std::cout << "Building BVH!\n";
+            std::cout << "NUM TRIANGLES: " << obj_primitives.value().size() << std::endl;
+            misc::Timer timer{"BVH building..."};
+            timer.start();        
+            auto bvh_node = std::make_shared<acceleration::BVHNode>(obj_primitives.value());
+            timer.end();
+            timer.displaySeconds();
+            scene.addObject(bvh_node);
+        }else{
+            scene.addObject(obj.object);
+        }
     } 
+
+    scene.computeBoundingBox();
 
     //Add lights
     for(auto& light: _lights){

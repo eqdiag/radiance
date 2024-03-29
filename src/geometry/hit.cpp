@@ -7,6 +7,11 @@ void radiance::geometry::Hit::setFaceNormal(const math::Vec3 &in, const math::Ve
     normal = outside ? n : -n;
 }
 
+std::optional<std::vector<std::shared_ptr<radiance::geometry::Hittable>>> radiance::geometry::Hittable::getPrimitives(const math::Transform& transform)
+{
+    return std::nullopt;
+}
+
 void radiance::geometry::Hittable::setMaterial(std::shared_ptr<materials::Material> material)
 {
     _material = material;
@@ -16,7 +21,17 @@ radiance::geometry::InstancedHittable::InstancedHittable(std::shared_ptr<Hittabl
 _object{object},
 _transform{transform}
 {
+    computeBoundingBox();
+}
 
+void radiance::geometry::InstancedHittable::computeBoundingBox()
+{
+    radiance::geometry::AABB base_box{};
+    auto matrix = _transform.getMatrix();
+    if(_object->getBoundingBox(base_box)){
+        _box.min = (matrix * math::Vec4{base_box.min.x(),base_box.min.y(),base_box.min.z(),1.0}).xyz();
+        _box.min = (matrix * math::Vec4{base_box.max.x(),base_box.max.y(),base_box.max.z(),1.0}).xyz();
+    }
 }
 
 bool radiance::geometry::InstancedHittable::trace(const math::Ray &ray, Hit &hit, float tmin, float tmax) const
@@ -43,4 +58,23 @@ bool radiance::geometry::InstancedHittable::trace(const math::Ray &ray, Hit &hit
     hit._material = _material;
 
     return true;
+}
+
+bool radiance::geometry::InstancedHittable::getBoundingBox(radiance::geometry::AABB &box) const
+{
+    box = _box;
+    return true;
+}
+
+std::optional<std::vector<std::shared_ptr<radiance::geometry::Hittable>>> radiance::geometry::InstancedHittable::getPrimitives(const math::Transform &transform)
+{
+    auto transformed_objects = _object->getPrimitives(_transform);
+    if(!transformed_objects.has_value()) return std::nullopt;
+    return transformed_objects;
+}
+
+void radiance::geometry::InstancedHittable::setMaterial(std::shared_ptr<materials::Material> material)
+{
+    _material = material;
+    _object->setMaterial(material);
 }
