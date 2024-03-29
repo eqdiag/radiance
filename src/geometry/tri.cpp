@@ -63,7 +63,7 @@ bool radiance::geometry::Tri::trace(const math::Ray &ray, Hit &hit, float tmin, 
 
 bool radiance::geometry::Tri::getBoundingBox(radiance::geometry::AABB &box) const
 {
-    box = _box;
+    box = _box.pad(0.01);
     return true;
 }
 

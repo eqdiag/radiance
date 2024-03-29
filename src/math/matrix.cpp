@@ -185,7 +185,8 @@ math::Mat4 math::Mat4::fromRotateZAxis(float angle)
 math::Mat4 math::Mat4::fromAxisAngle(float angle, const Vec3& axis) 
 {
 	float s = sin(angle);
-	float c = sqrt(1 - s*s);
+	//float c = sqrt(1.0f - s*s);
+	float c = cos(angle);
 	Vec3 u = axis.normalize();
 
 	float uxx = u.x() * u.x();

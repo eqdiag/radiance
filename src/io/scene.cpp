@@ -477,6 +477,7 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
             math::Vec3{-1,1,0}
         };
         std::vector<uint32_t> indices = {
+            //0,1,2
             0,1,2,
             0,2,3
         };
@@ -498,7 +499,6 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
 
         }else{
         
-
             _objects.emplace_back(HittableParams{mesh,material_name});
         }
         if(_debugMessages) std::cout <<"\t\tMATERIAL ID: " << material_name << std::endl;
@@ -652,6 +652,7 @@ bool radiance::io::SceneParser::build(radiance::scene::Scene &scene)
 
     //Add lights
     for(auto& light: _lights){
+        std::cout << light.position << std::endl;
         scene.addLight(light);
     }   
 

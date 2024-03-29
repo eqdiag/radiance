@@ -13,6 +13,7 @@ namespace radiance{
                 AABB(math::Vec3 min,math::Vec3 max);
 
                 AABB merge(const AABB& rhs);
+                AABB pad(float padding) const;
 
                 math::Vec3 getCentroid() const;
 

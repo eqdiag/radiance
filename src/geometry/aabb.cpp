@@ -14,6 +14,14 @@ radiance::geometry::AABB radiance::geometry::AABB::merge(const AABB &rhs)
     };
 }
 
+radiance::geometry::AABB radiance::geometry::AABB::pad(float padding) const
+{
+    return AABB{
+        min - math::Vec3{padding,padding,padding},
+        max + math::Vec3{padding,padding,padding}
+    };
+}
+
 math::Vec3 radiance::geometry::AABB::getCentroid() const
 {
     return math::Vec3{
@@ -27,6 +35,7 @@ bool radiance::geometry::AABB::isHit(const math::Ray &ray, float& tmin, float& t
 {
     auto origin = ray.getSrc();
     auto dir = ray.getDir();
+
     //Andrew Kensler's intersection routine
     for (int a = 0; a < 3; a++) {
 
@@ -38,6 +47,7 @@ bool radiance::geometry::AABB::isHit(const math::Ray &ray, float& tmin, float& t
         tmax = t1 < tmax ? t1 : tmax;
         if (tmax <= tmin) return false;
     }
+
 
     return true;   
 }

@@ -69,7 +69,7 @@ int main(int argc,char ** argv){
 
 
     //Pass in ray offset, is scene dependent
-    radiance::scene::Scene scene{.1};
+    radiance::scene::Scene scene{.01};
     radiance::io::SceneParser parser{};
 
     radiance::misc::Timer timer{"Scene parse"};

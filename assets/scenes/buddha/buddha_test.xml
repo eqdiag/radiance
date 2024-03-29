@@ -13,8 +13,8 @@
 		</sampler>
 
 		<film type="hdrfilm">
-			<integer name="width" value="200"/>
-			<integer name="height" value="200"/>
+			<integer name="width" value="640"/>
+			<integer name="height" value="480"/>
 		</film>
 	</sensor>
 
@@ -40,8 +40,8 @@
         <point name="position" x="-30" y="20" z="5"/>
 	</emitter>
 
-	<shape type="ply">
-	    <string name="filename" value="buddha.ply"/>
+	<shape type="obj">
+	    <string name="filename" value="buddha.obj"/>
 		<ref id="gold"/>
 	</shape>
 
@@ -57,5 +57,12 @@
 		<ref id="mirror"/>
 	</shape>
 
-
+	<shape type="rectangle">
+		<transform name="toWorld">
+			<rotate angle="90" x="1"/>
+			<translate y="-0.5"/>
+			<scale x="2000" y="1" z="2000"/>
+		</transform>
+		<ref id="gray"/>
+	</shape>
 </scene>

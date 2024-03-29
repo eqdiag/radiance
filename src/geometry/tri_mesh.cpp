@@ -91,9 +91,10 @@ bool radiance::geometry::TriMesh::trace(const math::Ray &ray, Hit &hit, float tm
         uint32_t idx1 = idx0 + 1;
         uint32_t idx2 = idx0 + 2; 
 
-        auto v0 = _vertices[idx0];
-        auto v1 = _vertices[idx1];
-        auto v2 = _vertices[idx2];
+        auto v0 = _vertices[_indices[idx0]];
+        auto v1 = _vertices[_indices[idx1]];
+        auto v2 = _vertices[_indices[idx2]];
+
 
         geometry::Tri tri{v0,v1,v2,nullptr};
         
@@ -156,6 +157,7 @@ void radiance::geometry::TriMesh::getFaceVertices(uint32_t faceIndex, math::Vec3
     v0 = _vertices[_indices[face_id]];
     v1 = _vertices[_indices[face_id + 1]];
     v2 = _vertices[_indices[face_id + 2]];
+
 }
 
 uint32_t radiance::geometry::TriMesh::getNumFaces() const

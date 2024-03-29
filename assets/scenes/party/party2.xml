@@ -52,43 +52,42 @@
         <point name="position" x="0" y="1" z="-4"/>
 	</emitter>
 
-	<shape type="ply">
+	<shape type="obj">
 		<transform name="toWorld">
 			<translate x="-0.5" y="0.4"/>
 			<scale x="2" y="2" z="2"/>
 			<rotate angle="20" x="1" y="1" z="1"/>
 		</transform>
-	    <string name="filename" value="../buddha/buddha.ply"/>
+	    <string name="filename" value="../buddha/buddha.obj"/>
 		<ref id="gold"/>
 	</shape>
 
-	<shape type="ply">
+	<shape type="obj">
 		<transform name="toWorld">
 			<translate z="1.5" y="-0.3"/>
 			<scale x="0.7" y="0.7" z="-0.7"/>
 			<rotate angle="-20" x="1" y="1" z="1"/>
 		</transform>
-	    <string name="filename" value="../bunny/bunny.ply"/>
+	    <string name="filename" value="../bunny/bunny.obj"/>
 		<ref id="green"/>
 	</shape>
 
-	<shape type="ply">
+	<shape type="obj">
 		<transform name="toWorld">
 			<rotate angle="50" x="1"/>
 			<translate x="0.75" y="0.3"/>
 			<scale x="1.6" y="1.6" z="1.6"/>
 		</transform>
-	    <string name="filename" value="../dragon/dragon.ply"/>
+	    <string name="filename" value="../dragon/dragon.obj"/>
 		<ref id="blue"/>
 	</shape>
 
-	<shape type="ply">
+	<shape type="rectangle">
 		<transform name="toWorld">
-			<translate y="-2" z="4"/>
-			<scale x="1" y="-1" z="1"/>
+			<rotate angle="90" x="1"/>
+			<translate y="-0.5"/>
+			<scale x="2000" y="1" z="2000"/>
 		</transform>
-	    <string name="filename" value="armadillo.ply"/>
-		<ref id="purple"/>
+		<ref id="gray"/>
 	</shape>
-
 </scene>
