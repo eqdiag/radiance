@@ -17,14 +17,19 @@ namespace radiance{
 
                 void computeBoundingBox();
 
+
                 bool trace(const math::Ray& ray,Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
                 bool getBoundingBox(radiance::geometry::AABB& box) const override;
 
-
+ //Assumes point is on the unit sphere
+                math::Vec2 pointToUV(const math::Vec3& p) const;
 
             private:
+               
+
                 math::Vec3 _center{};
                 float _radius{};
+                
 
                 radiance::geometry::AABB _box{};
 

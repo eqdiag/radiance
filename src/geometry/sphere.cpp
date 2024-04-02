@@ -1,4 +1,7 @@
 #include "sphere.h"
+#include "math/util.h"
+
+#include <cassert>
 
 radiance::geometry::Sphere::Sphere(math::Vec3 & center, float radius):
     _center{center},
@@ -26,6 +29,7 @@ void radiance::geometry::Sphere::computeBoundingBox()
 bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,float tmax) const 
 {
 
+    assert(_material != nullptr);
     auto dx = ray.getSrc() - _center;
 
     float a = 1.0;
@@ -45,6 +49,9 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,
         //Adjust so that normal always faces away from ray dir
         hit.setFaceNormal(ray.getDir(),normal);
         hit._material = _material;
+        assert(hit._material != nullptr);
+        hit.uv = pointToUV(normal);
+
         return true;
     }
     t = (-b + std::sqrt(discrim)) * 0.5;
@@ -54,7 +61,9 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit &hit,float tmin,
         auto normal = (hit.point - _center) / _radius;
         //Adjust so that normal always faces away from ray dir
         hit.setFaceNormal(ray.getDir(),normal);
+        //hit.uv = pointToUV(normal);
         hit._material = _material;
+        assert(hit._material != nullptr);
         return true;
     }
 
@@ -67,3 +76,9 @@ bool radiance::geometry::Sphere::getBoundingBox(radiance::geometry::AABB &box) c
     return false;
 }
 
+math::Vec2 radiance::geometry::Sphere::pointToUV(const math::Vec3 &p) const
+{
+    float phi = acos(p.y());
+    float theta = atan2(-p.z(),p.x()) + math::PI;
+    return math::Vec2{theta / math::TWO_PI,phi / math::PI};
+}

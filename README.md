@@ -46,10 +46,23 @@ All dependencies are self-contained in this project using git's submodule system
 
 
 ### Feature set 3
-- [ ] textures
-- [ ] shading normals
+
+
+- [x] add image data type (holds buffer, for reads and writes)
+- [x] textures
+    - [ ] inline
+    - xx] texture stretching/sampling
+    - [x] read png images
+    - [x] read jpg images
+- [x] shading normals
+
 - [ ] fresnel reflection
 - [ ] area lights
+
+- [ ] full refactor
+    - [ ] radiance:dir:name structure
+    - [ ] parsing cleaned up
+
 - [ ] perlin noise
 - [ ] volumes
 - [ ] schlick fresnel

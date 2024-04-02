@@ -1,6 +1,7 @@
 #include "scene.h"
 
 #include <optional>
+#include <cassert>
 #include "math/util.h"
 #include "math/rand.h"
 
@@ -18,7 +19,7 @@ radiance::scene::Scene::Scene(cameras::PerspectiveCamera &camera)
 
 }
 
-void radiance::scene::Scene::generateImageBuffer(char *pixels) const
+void radiance::scene::Scene::generateImage(radiance::io::Image<math::Color3>& image) const
 {
     for(int i = 0;i < _camera.viewingPlane.imageHeight;i++){
         for(int j = 0;j < _camera.viewingPlane.imageWidth;j++){
@@ -31,8 +32,8 @@ void radiance::scene::Scene::generateImageBuffer(char *pixels) const
                 float dy = math::randomFloat(-0.5,0.5f);
 
                 auto ray = _camera.generateRay(j+dx,i+dy);
-                auto current_col = radiance(ray,0);
 
+                auto current_col = radiance(ray,0);
 
                 col += current_col;
             }
@@ -49,12 +50,10 @@ void radiance::scene::Scene::generateImageBuffer(char *pixels) const
             r = std::pow(r,1.0/2.2);
             g = std::pow(g,1.0/2.2);
             b = std::pow(b,1.0/2.2);
+            image.set(j,i,math::Color3{
+                r*255.99f,g*255.99f,b*255.99f
+            });
 
-
-            int idx = _camera.viewingPlane.numChannels*(i*_camera.viewingPlane.imageWidth + j);
-            pixels[idx] = r*255.99;
-            pixels[idx + 1] = g*255.99;
-            pixels[idx + 2] = b*255.99;
         }
         std::cout << "\rRendered line: [" << i + 1<< "/" << _camera.viewingPlane.imageHeight << "]";
         std::cout << std::flush;
@@ -84,7 +83,6 @@ math::Color3 radiance::scene::Scene::radiance(const math::Ray &ray,int depth) co
 
     //Check if you hit something
     geometry::Hit hit{};
-    
     if(trace(ray,hit,_DT)){
         //Check if the material causes the ray to bounce
         math::Color3 attenuation{};
@@ -105,6 +103,7 @@ math::Color3 radiance::scene::Scene::radiance(const math::Ray &ray,int depth) co
                 //Check if pt in shadow
                 math::Ray shadow_ray{hit.point,l};
                 geometry::Hit shadow_hit{};
+
                 bool some_hit = trace(shadow_ray,shadow_hit,_DT);
 
                 bool in_shadow = some_hit && (shadow_hit.t < d);
@@ -150,6 +149,7 @@ bool radiance::scene::Scene::trace(const math::Ray &ray, geometry::Hit &hit, flo
     bool hit_found = closest.has_value();
     if(hit_found){
         hit = closest.value();
+        assert(hit._material != nullptr);
     }
 
     return hit_found;

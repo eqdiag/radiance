@@ -50,9 +50,8 @@ file(GLOB src
     "src/math/*.cpp"
     "src/misc/*.cpp"
     "src/scene/*.cpp"
-    "external/stb_image/stb_image.cpp"
-    "external/stb_image/stb_image_write.cpp"
     "external/tiny_obj/tiny_obj_loader.cpp"
+    "external/tiny_exr/miniz.c"
 )
 
 
@@ -88,6 +87,8 @@ configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/src/settings.h.in"
     "${CMAKE_CURRENT_LIST_DIR}/src/settings.h"
 )
+
+
 
 message("Building radiance...")
 
@@ -132,6 +133,8 @@ set(
     EXAMPLE_BUILD_DIR 
     "${CMAKE_CURRENT_LIST_DIR}/build/examples"
 )
+
+
 
 #foreach(EXAMPLE ${EXAMPLES})
 

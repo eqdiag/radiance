@@ -4,8 +4,10 @@
 #include "math/rand.h"
 
 materials::Glass::Glass(float indexOfRefraction):
+    Material{nullptr},
     _index{indexOfRefraction}
 {
+    
 }
 
 bool materials::Glass::bounce(const math::Vec3 &in, const radiance::geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const

@@ -7,6 +7,7 @@
 #include "geometry/sphere.h"
 #include "lights/point_light.h"
 #include "cameras/perspective_camera.h"
+#include "io/image.h"
 
 namespace radiance{
 
@@ -17,7 +18,7 @@ namespace radiance{
                 Scene(float dt);
                 Scene(cameras::PerspectiveCamera& camera);
 
-                void generateImageBuffer(char* pixels) const;
+                void generateImage(radiance::io::Image<math::Color3>& image) const;
 
                 void computeBoundingBox();
 
@@ -53,9 +54,10 @@ namespace radiance{
                 static int _maxDepth;
                 const int MAX_DEPTH = 400;
 
-            float _DT{0.01};
+                float _DT{0.01};
 
         };
-    }
 
+   
+    }
 }

@@ -24,10 +24,18 @@ namespace radiance{
             //Hit from outside, or inside
             bool outside{};
             float t;
+            //Texture coordinates
+            math::Vec2 uv;
             std::shared_ptr<materials::Material> _material{};
 
             void setFaceNormal(const math::Vec3& in,const math::Vec3& n);
 
+        };
+
+        struct Vertex{
+            math::Vec3 position;
+            math::Vec3 normal;
+            math::Vec2 uv;
         };
 
         

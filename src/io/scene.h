@@ -25,6 +25,11 @@ namespace radiance{
             math::Vec3 up;
         };
 
+        struct MaterialParams{
+            std::shared_ptr<materials::Material> material;
+            std::string textureId;
+        };
+
         struct HittableParams{
             std::shared_ptr<geometry::Hittable> object;
             std::string materialId;
@@ -39,11 +44,26 @@ namespace radiance{
 
                 cameras::ViewingPlane getViewingPlane() const;
             private:
+
+                //Scene parsing
                 bool parseSceneSensorNode(radiance::scene::Scene& scene,pugi::xml_node& sensor_node);
-                bool parseSceneMaterialNode(radiance::scene::Scene& scene,pugi::xml_node& material_node,std::string& materialName);        
+
+                //Texture parsing
+                bool parseSceneTextureNode(radiance::scene::Scene& scene,pugi::xml_node& texture_node,std::string& textureName);
+                
+                //Material parsing
+                bool parseSceneMaterialNode(radiance::scene::Scene& scene,pugi::xml_node& material_node,std::string& materialName);    
+
+                //Light parsing    
                 bool parseSceneLightNode(radiance::scene::Scene& scene,pugi::xml_node& light_node);        
+
+                //Geometry parsing
                 bool parseSceneGeometryNode(radiance::scene::Scene& scene,pugi::xml_node& geometry_node);
-                bool parseSceneTransformNode(radiance::scene::Scene& scene,pugi::xml_node& transform_node,math::Transform& transform);    
+
+                //Transform parsing
+                bool parseSceneTransformNode(radiance::scene::Scene& scene,pugi::xml_node& transform_node,math::Transform& transform);   
+
+                //Background parsing 
                 bool parseSceneBackgroundNode(radiance::scene::Scene& scene,pugi::xml_node& bg_node);        
     
 
@@ -58,13 +78,17 @@ namespace radiance{
                 CameraParams _cameraParams{};
 
                 int _inlineMaterialCounter{0};
+                int _inlineTextureCounter{0};
 
                 bool _backgroundSet{false};
                 math::Color3 _backgroundColor{};
 
+                std::unordered_map<std::string,std::shared_ptr<radiance::textures::Texture>> _textureMap{};
                 std::unordered_map<std::string,std::shared_ptr<materials::Material>> _materialMap{};
                 std::vector<lights::PointLight> _lights{};
+                std::vector<MaterialParams> _materials{};
                 std::vector<HittableParams> _objects{};
+
 
                 bool _debugMessages{false};
 

@@ -29,11 +29,16 @@
 
 #include "math/transform.h"
 
+#include "tiny_exr/tinyexr.h"
+
 #include <chrono>
 #include <filesystem>
 #include <thread>
 
 int main(int argc,char ** argv){
+
+    /*Testing parsing exr*/
+
 
 
     auto cmdl = argh::parser(argc, argv);
@@ -96,19 +101,19 @@ int main(int argc,char ** argv){
     auto h = view_plane.imageHeight;
     auto num_channels = view_plane.numChannels;
 
-    int buffer_size = w * h * num_channels;
-    char pixels[buffer_size];
+    radiance::io::Image<math::Color3> image{w,h};
+
     timer.setName("Render");
 
     timer.start();
-    scene.generateImageBuffer(pixels);
+    scene.generateImage(image);
     timer.end();
     timer.displaySeconds();
 
-    if(!radiance::io::writeBufferToRGB_PNG(pixels,w,h,filename.c_str())){
-        std::cerr << "\n Failed to write image: " << filename << std::endl;
+    if(!radiance::io::writeRGBImageToFile(image,radiance::io::ImageType::PNG,filename.c_str())){
+        std::cerr << "\nFailed to write image: " << filename << std::endl;
     }else{
-        std::cout << "\n Wrote rendered image: " << filename << std::endl;
+        std::cout << "\nWrote rendered image: " << filename << std::endl;
     }
     
     std::cout << "Max depth traversed: " << scene.getMaxDepth() << std::endl;

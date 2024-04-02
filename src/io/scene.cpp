@@ -54,6 +54,12 @@ bool radiance::io::SceneParser::readSceneFromFile(radiance::scene::Scene &scene,
                 if(!parseSceneSensorNode(scene,child)) return false;
             }
 
+            //Parse texture node
+            if(!strcmp(child.name(),"texture")){
+                std::string dummy{};
+                if(!parseSceneTextureNode(scene,child,dummy)) return false;
+            }
+
             //Bsdf node
             if(!strcmp(child.name(),"bsdf")){
                 std::string dummy{};
@@ -99,10 +105,10 @@ bool radiance::io::SceneParser::parseSceneSensorNode(radiance::scene::Scene &sce
 {
     if(_debugMessages) std::cout << "PARSING SENSOR\n";
 
-    auto cam_type = sensor_node.attribute("type").value();
+    auto cam_type = sensor_node.attribute("type");
 
     //Only support perspective cameras right now
-    if(strcmp(cam_type,"perspective")) return false;
+    if(!cam_type ||  strcmp(cam_type.value(),"perspective")) return false;
 
 
     for(auto& child: sensor_node.children()){
@@ -222,6 +228,123 @@ bool radiance::io::SceneParser::parseSceneSensorNode(radiance::scene::Scene &sce
     return true;
 }
 
+bool radiance::io::SceneParser::parseSceneTextureNode(radiance::scene::Scene &scene, pugi::xml_node &texture_node, std::string &textureName)
+{
+    if(_debugMessages) std::cout << "PARSING TEXTURE\n";
+
+    auto type = texture_node.attribute("type");
+
+    if(!type || strcmp(type.value(),"bitmap")){
+        std::cerr << "PARSE ERROR: Only support bitmap textures!\n"; 
+        return false;
+    }
+
+    auto id = texture_node.attribute("id");
+    auto name = texture_node.attribute("name");
+
+
+
+    if(!id && !name){
+        std::cerr << "PARSE ERROR: No texture id or name specified!\n"; 
+        return false;
+    }
+
+    bool inline_texture = false;
+
+    if(name){
+        inline_texture = true;
+        if(_debugMessages) std::cout << "\tTEXTURE IS INLINE\n";
+    }
+
+    auto path_node = texture_node.child("string");
+    if(!path_node){
+        std::cerr << "PARSE ERROR: No path to texture specified!\n"; 
+        return false;
+    }
+
+    auto fname = path_node.attribute("name");
+
+    if(!fname || strcmp(fname.value(),"filename")){
+        std::cerr << "PARSE ERROR: Must specify filename for texture!\n"; 
+        return false;
+    }
+
+    auto value = path_node.attribute("value");
+
+    if(!value){
+        std::cerr << "PARSE ERROR: Must specify filename for texture!\n"; 
+        return false;
+    }
+
+    std::string filename = value.value();
+    std::string full_path = std::string{_fileDir} + filename;
+
+    auto ext = std::filesystem::path(filename).extension().string();
+
+    auto img_type = io::extensionToImageType(ext.c_str(),ext.length());
+
+
+    auto image = std::make_shared<Image<math::Color3>>();
+
+    if(!radiance::io::readRGBImageFromFile(*image,img_type,full_path.c_str())){
+        std::cerr << "PARSE ERROR: Failed to load image: " << full_path << std::endl; 
+        return false;
+    }
+
+    if(_debugMessages){
+        std::cout << "\tWIDTH: " << image->getWidth() << std::endl;
+        std::cout << "\tHEIGHT: " << image->getHeight() << std::endl;
+        std::cout << "\tTEXTURE ID: " << id.value() << std::endl;
+    }
+
+    if(_debugMessages) std::cout << "SUCCESS: Read file " << full_path << " into a texture!\n";
+
+    math::Vec2 scale{1,1};
+    math::Vec2 offset{0,0};
+
+    for(const auto& child: texture_node.children()){
+        if(!strcmp(child.name(),"float")){
+
+            if(child.attribute("name") && child.attribute("value")){
+
+                auto name = child.attribute("name").value();
+                auto value = child.attribute("value").value();
+
+                if(!strcmp(name,"uscale")){
+                    scale[0] = std::stof(value);
+                }else if(!strcmp(name,"vscale")){
+                    scale[1] = std::stof(value);
+                }else if(!strcmp(name,"uoffset")){
+                    offset[0] = std::stof(value);
+                }else if(!strcmp(name,"voffset")){
+                    offset[1] = std::stof(value);
+                }else{
+                    std::cerr << "PARSE ERR: Unsupported texture sampling option " << name << std::endl;
+                }
+                
+            }
+        }
+    }
+
+    if(_debugMessages){
+        std::cout << "\tSCALE: " << scale;
+        std::cout << "\tOFFSET: " << offset;
+    }
+
+
+    auto texture = std::make_shared<radiance::textures::ImageTexture>(image,scale,offset);
+    if(inline_texture){
+        std::string inline_str{"inline_texture_"};
+        inline_str += std::to_string(_inlineTextureCounter);
+        _inlineTextureCounter++;
+        textureName = inline_str;
+        _textureMap[textureName] = texture;
+    }else{
+        _textureMap[id.value()] = texture;
+    }
+    return true;
+}
+
 bool radiance::io::SceneParser::parseSceneMaterialNode(radiance::scene::Scene &scene, pugi::xml_node &material_node,std::string& materialName)
 {
     if(_debugMessages) std::cout << "PARSING MATERIAL\n";
@@ -246,23 +369,73 @@ bool radiance::io::SceneParser::parseSceneMaterialNode(radiance::scene::Scene &s
 
     if(_debugMessages) std::cout <<"\tID: " << materialName << std::endl;
 
+    auto texture_child = material_node.child("texture");
+    bool inline_texture = false;
+    std::string texture_name{};
+
+    if(texture_child){
+        inline_texture = true;
+        if(!parseSceneTextureNode(scene,texture_child,texture_name)) return false;
+    }
+
+
     if(!strcmp(material_type,"diffuse")){
 
 
-        auto diffuse_data = material_node.child("rgb");
-        auto name = diffuse_data.attribute("name").value();
-        auto value = diffuse_data.attribute("value").value();
-        if(strcmp(name,"reflectance")){ 
-            if(_debugMessages) std::cout << "PARSE ERR: Must have reflectance `name` on `rgb` node to be a valid scene file!\n";
+        auto constant_data = material_node.child("rgb");
+        auto texture_data = material_node.child("ref");
+
+        
+        //if(_debugMessages) std::cout << "PARSE SOFT ERR: Don't support texture parsing yet!!\n";
+
+        if(constant_data){
+            auto name = constant_data.attribute("name").value();
+            auto value = constant_data.attribute("value").value();
+
+            if(!strcmp(name,"reflectance")){ 
+                math::Color3 albedo{};
+                std::istringstream s(value);
+                s >> albedo;
+                if(_debugMessages) std::cout << "\tPARSING DIFFUSE: " << albedo;
+                auto material = std::make_shared<materials::Diffuse>(albedo);
+                _materialMap[materialName] = material;
+                if(inline_texture){
+                    _materials.emplace_back(MaterialParams{material,texture_name});
+                }
+            }else{
+                if(_debugMessages) std::cout << "PARSE ERR: Must have reflectance `name` on `rgb` node to be a valid scene file!\n";
+                return false;
+            }
+        }else if(texture_data){
+
+            auto name = texture_data.attribute("name");
+            auto tex_id = texture_data.attribute("id");
+
+            if(!name || strcmp(name.value(),"reflectance")){
+                if(_debugMessages) std::cout << "PARSE ERR: Texture must have reflectance tag!\n";
+                return false;
+            }
+
+            if(!tex_id){
+                if(_debugMessages) std::cout << "PARSE ERR: Must reference texture id!\n";
+                return false;
+            }
+
+            auto material = std::make_shared<materials::Diffuse>();
+            _materialMap[materialName] = material;
+            _materials.emplace_back(MaterialParams{material,tex_id.value()});
+
+            if(_debugMessages) std::cout << "\tTEXTURE ID: " << tex_id.value() << std::endl;
+
+        }else if(inline_texture){
+            auto texture = _textureMap[texture_name];
+            auto material = std::make_shared<materials::Diffuse>();
+            _materialMap[materialName] = material;
+            _materials.emplace_back(MaterialParams{material,texture_name});
+            if(_debugMessages) std::cout << "\tTEXTURE ID: " << texture_name << std::endl;
+        }else{
             return false;
         }
-
-        math::Color3 albedo{};
-        std::istringstream s(value);
-        s >> albedo;
-        if(_debugMessages) std::cout << "\tPARSING DIFFUSE: " << albedo;
-
-       _materialMap[materialName] = std::make_shared<materials::Diffuse>(albedo);
 
     }else if(!strcmp(material_type,"mirror")){
 
@@ -470,14 +643,13 @@ bool radiance::io::SceneParser::parseSceneGeometryNode(radiance::scene::Scene &s
             material_name = id_node.attribute("id").value();
         }
 
-        std::vector<math::Vec3> vertices = {
-            math::Vec3{-1,-1,0},
-            math::Vec3{1,-1,0},
-            math::Vec3{1,1,0},
-            math::Vec3{-1,1,0}
+        std::vector<radiance::geometry::Vertex> vertices = {
+            radiance::geometry::Vertex{math::Vec3{-1,-1,0},math::Vec3{0,0,1},math::Vec2{0,0}},
+            radiance::geometry::Vertex{math::Vec3{1,-1,0},math::Vec3{0,0,1},math::Vec2{1,0}},
+            radiance::geometry::Vertex{math::Vec3{1,1,0},math::Vec3{0,0,1},math::Vec2{1,1}},
+            radiance::geometry::Vertex{math::Vec3{-1,1,0},math::Vec3{0,0,1},math::Vec2{0,1}},
         };
         std::vector<uint32_t> indices = {
-            //0,1,2
             0,1,2,
             0,2,3
         };
@@ -625,6 +797,12 @@ bool radiance::io::SceneParser::build(radiance::scene::Scene &scene)
     //Set camera
     scene.setCamera(camera);
 
+    //Set material textures
+    for(auto& mat: _materials){
+        auto id = mat.textureId;
+        if(!_textureMap.contains(id)) return false;
+        mat.material->setTexture(_textureMap[id]);
+    }
 
     //Set geometry materials
     for(auto& obj: _objects){
@@ -652,7 +830,6 @@ bool radiance::io::SceneParser::build(radiance::scene::Scene &scene)
 
     //Add lights
     for(auto& light: _lights){
-        std::cout << light.position << std::endl;
         scene.addLight(light);
     }   
 
