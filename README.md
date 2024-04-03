@@ -50,18 +50,16 @@ All dependencies are self-contained in this project using git's submodule system
 
 - [x] add image data type (holds buffer, for reads and writes)
 - [x] textures
-    - [ ] inline
-    - xx] texture stretching/sampling
+    - [x] inline
+    - [x] texture stretching/sampling
     - [x] read png images
     - [x] read jpg images
 - [x] shading normals
 
-- [ ] fresnel reflection
+- [x] fresnel reflection
 - [ ] area lights
-
-- [ ] full refactor
-    - [ ] radiance:dir:name structure
-    - [ ] parsing cleaned up
+    - [ ] plastic material inline
+    - [ ] triangle area light
 
 - [ ] perlin noise
 - [ ] volumes
@@ -79,6 +77,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] rough dielecetric bsdgf
 - [ ] determnistic MIS
 
+
 ## Minor cleanup
 - [ ] Tri mesh triangle intersection speed up
     - [ ] creating too many tris + shared ptr copies
@@ -89,6 +88,8 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] make radiance a lib so exmaples compile faster
 - [ ] make sure dependencies all in readme
 - [ ] change scene function from shade to radiance
+- [ ] clean up parser
+- [ ] make sure namespace structure is consistent (radiance::folder::x)
 
 ### Bonus
 - [ ] replace random gen with PCG

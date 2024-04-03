@@ -9,7 +9,7 @@
 		<float name="fov" value="39.3077"/>
 
 		<sampler type="independent">
-			<integer name="sampleCount" value="1"/>
+			<integer name="sampleCount" value="512"/>
 		</sampler>
 
 		<film type="hdrfilm">
@@ -49,18 +49,10 @@
 		</texture>
 	</bsdf>
 
-	<shape type="obj">
-		<string name="filename" value="meshes/cbox_luminaire.obj"/>
-		<transform name="toWorld">
-			<translate x="0" y="-0.5" z="0"/>
-		</transform>
-
-		<ref id="light"/>
-
-		<emitter type="area">
-			<rgb name="radiance" value="10.313, 5.4544, 1.38152"/>
-		</emitter>
-	</shape>
+	<emitter type="point">
+        <rgb name="intensity" value="206260, 109088, 27630"/>
+        <point name="position" x="278" y="548" z="279.5"/>
+	</emitter>
 
 	<shape type="obj">
 		<string name="filename" value="meshes/cbox_floor.obj"/>

@@ -18,14 +18,6 @@
 		</film>
 	</sensor>
 
-	<bsdf type="plastic" id="box1">
-		<rgb name="reflectance" value="0.3, 0.2, 0.1"/>
-	</bsdf>
-
-	<bsdf type="plastic" id="box2">
-		<rgb name="reflectance" value="0.1, 0.2, 0.3"/>
-	</bsdf>
-
 	<bsdf type="diffuse" id="white">
 		<rgb name="reflectance" value="0.884774, 0.699933, 0.666224"/>
 	</bsdf>
@@ -92,17 +84,6 @@
 		<ref id="red"/>
 	</shape>
 
-	<shape type="sphere">
-		<point name="center" x="150" y="100" z="200"/>
-		<float name="radius" value="100"/>
-		<ref id="box1"/>
-	</shape>
-
-	<shape type="sphere">
-		<point name="center" x="380" y="120" z="300"/>
-		<float name="radius" value="120"/>
-		<ref id="box2"/>
-	</shape>
 
 	<background>
 		<rgb name="radiance" value="0, 0, 0"/>

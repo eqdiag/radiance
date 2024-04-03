@@ -25,3 +25,30 @@ bool materials::Diffuse::bounce(const math::Vec3 &in, const radiance::geometry::
     return false;
 }
 
+materials::DiffuseEmitter::DiffuseEmitter():
+    Material{std::make_shared<radiance::textures::ConstantTexture>(math::Color3{1,1,1})}
+{
+
+}
+
+materials::DiffuseEmitter::DiffuseEmitter(math::Color3 albedo):
+    Material{std::make_shared<radiance::textures::ConstantTexture>(albedo)}
+{
+
+}
+
+materials::DiffuseEmitter::DiffuseEmitter(std::shared_ptr<radiance::textures::Texture> texture):
+    Material{texture}
+{
+
+}
+
+bool materials::DiffuseEmitter::bounce(const math::Vec3 &in, const radiance::geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const
+{
+    return false;
+}
+
+math::Color3 materials::DiffuseEmitter::emit(float u, float v, math::Vec3 p) const
+{
+    return _texture->getValue(u,v,p);
+}

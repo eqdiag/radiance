@@ -1,5 +1,6 @@
 #include "plastic.h"
 #include "math/util.h"
+#include "math/rand.h"
 
 materials::Plastic::Plastic(float index):
     Material{std::make_shared<radiance::textures::ConstantTexture>(math::Color3{1,1,1})},
@@ -31,15 +32,22 @@ materials::Plastic::Plastic(float index, std::shared_ptr<radiance::textures::Tex
 bool materials::Plastic::bounce(const math::Vec3 &in, const radiance::geometry::Hit &hit, math::Vec3 &attenuation, math::Vec3 &out) const
 {
 
-    /*attenuation = _texture->getValue(hit.uv.x(),hit.uv.y(),hit.point);
-
-    out = math::reflect(in,hit.normal);
-
     float cos = hit.normal.dot(-in.normalize());
-    //Fresnel approximation
-    float f = math::schlick(cos,1.0 / _index);
-    attenuation*/
-    _glass->bounce(in,hit,attenuation,out);
 
-    return false;
+    float f = math::schlick(cos,1.0/_index);
+
+    //For now, diffuse just holds a constant tex informed color
+    auto diffuse = _texture->getValue(hit.uv.x(),hit.uv.y(),hit.point);
+
+
+    float r = math::randomFloat();
+    if(r < f){ //Reflect
+        out = math::reflect(in,hit.normal);
+        attenuation = math::Vec3{1,1,1};
+        return true;
+    }else{ //Just diffuse
+        attenuation = _texture->getValue(hit.uv.x(),hit.uv.y(),hit.point);
+        return false;
+    }
+
 }

@@ -18,6 +18,10 @@ namespace materials{
                 math::Vec3& out
                 ) const = 0;
 
+            virtual math::Color3 emit(float u,float v,math::Vec3 p) const{
+                return math::Color3{0,0,0};
+            };
+
             void setTexture(std::shared_ptr<radiance::textures::Texture> texture);
 
         protected:

@@ -5,6 +5,7 @@
 
 #include "materials/diffuse.h"
 #include "materials/mirror.h"
+#include "materials/plastic.h"
 
 #include "io/mesh.h"
 
@@ -286,6 +287,7 @@ bool radiance::io::SceneParser::parseSceneTextureNode(radiance::scene::Scene &sc
 
     auto image = std::make_shared<Image<math::Color3>>();
 
+
     if(!radiance::io::readRGBImageFromFile(*image,img_type,full_path.c_str())){
         std::cerr << "PARSE ERROR: Failed to load image: " << full_path << std::endl; 
         return false;
@@ -452,6 +454,95 @@ bool radiance::io::SceneParser::parseSceneMaterialNode(radiance::scene::Scene &s
         s >> reflectance;
         if(_debugMessages) std::cout << "\tPARSING MIRROR: " << reflectance;
        _materialMap[materialName] = std::make_shared<materials::Mirror>(reflectance);
+
+    }else if(!strcmp(material_type,"plastic")){
+
+        if(_debugMessages) std::cout << "\tPARSING PLASTIC\n";
+
+        auto constant_data = material_node.child("rgb");
+        auto texture_data = material_node.child("ref");
+
+        if(constant_data){
+
+            if(_debugMessages){
+                std::cout << "PARSE ERR: Plastic material doesn't support rgb nodes!\n";
+                return false;
+            }
+
+            auto name = constant_data.attribute("name").value();
+            auto value = constant_data.attribute("value").value();
+
+            if(!strcmp(name,"reflectance")){ 
+             
+                math::Color3 albedo{};
+                std::istringstream s(value);
+                s >> albedo;
+                auto material = std::make_shared<materials::Diffuse>(albedo);
+                _materialMap[materialName] = material;
+                if(inline_texture){
+                    _materials.emplace_back(MaterialParams{material,texture_name});
+                }
+            }else{
+                if(_debugMessages) std::cout << "PARSE ERR: Must have reflectance `name` on `rgb` node to be a valid scene file!\n";
+                return false;
+            }
+        }else if(texture_data){
+
+            //Get index of refraction
+            auto float_child = material_node.child("float");
+            if(!float_child) return false;
+            auto eta_name = float_child.attribute("name");
+            if(!eta_name || strcmp(eta_name.value(),"eta")) return false;
+
+            auto value = float_child.attribute("value");
+            if(!value) return false;
+
+            float eta = std::stof(value.value());
+            if(_debugMessages) std::cout << "\t\tETA: " << eta << std::endl; 
+
+
+
+            auto name = texture_data.attribute("name");
+            auto tex_id = texture_data.attribute("id");
+
+            if(!name || strcmp(name.value(),"reflectance")){
+                if(_debugMessages) std::cout << "PARSE ERR: Texture must have reflectance tag!\n";
+                return false;
+            }
+
+            if(!tex_id){
+                if(_debugMessages) std::cout << "PARSE ERR: Must reference texture id!\n";
+                return false;
+            }
+
+            auto material = std::make_shared<materials::Plastic>(eta);
+            _materialMap[materialName] = material;
+            _materials.emplace_back(MaterialParams{material,tex_id.value()});
+
+            if(_debugMessages) std::cout << "\tTEXTURE ID: " << tex_id.value() << std::endl;
+
+        }else if(inline_texture){
+
+            //Get index of refraction
+            auto float_child = material_node.child("float");
+            if(!float_child) return false;
+            auto eta_name = float_child.attribute("name");
+            if(!eta_name || strcmp(eta_name.value(),"eta")) return false;
+
+            auto value = float_child.attribute("value");
+            if(!value) return false;
+
+            float eta = std::stof(value.value());
+            if(_debugMessages) std::cout << "\t\tETA: " << eta << std::endl; 
+
+            auto texture = _textureMap[texture_name];
+            auto material = std::make_shared<materials::Plastic>(eta);
+            _materialMap[materialName] = material;
+            _materials.emplace_back(MaterialParams{material,texture_name});
+            if(_debugMessages) std::cout << "\tTEXTURE ID: " << texture_name << std::endl;
+        }else{
+            return false;
+        }
 
     }else{
         std::cerr << "PARSE ERR: Don't currently support material: " << material_type <<  "!\n";

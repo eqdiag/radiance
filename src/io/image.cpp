@@ -86,10 +86,11 @@ bool radiance::io::readJPGImageFromFile(Image<math::Color3> &image, const char *
 
 bool radiance::io::readPNGImageFromFile(Image<math::Color3> &image, const char *filename)
 {
+   
     int w,h,num_channels;
     unsigned char* data = stbi_load(filename,&w,&h,&num_channels,3);
 
-    if(!data || (num_channels != 3)){
+    if(!data){
         std::cerr << "ERROR: Failed to load alleged png image " << filename << std::endl;
         return false;
     }
@@ -97,13 +98,14 @@ bool radiance::io::readPNGImageFromFile(Image<math::Color3> &image, const char *
     image.resize(w,h);
 
     for(int i = 0;i<w*h;i++){
-        image.set(i,math::Color3{
-            static_cast<float>(data[3*i]) / 255.99f,
-            static_cast<float>(data[3*i+1]) / 255.99f,
-            static_cast<float>(data[3*i+2]) / 255.99f
-        });
+        float r = pow(static_cast<float>(data[3*i]) / 255.99f,2.2);
+        float g = pow(static_cast<float>(data[3*i + 1]) / 255.99f,2.2);
+        float b = pow(static_cast<float>(data[3*i + 2]) / 255.99f,2.2);
+
+        image.set(i,math::Color3{r,g,b});
 
     }
+
 
 
     stbi_image_free(data);
