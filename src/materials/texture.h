@@ -25,7 +25,7 @@ namespace radiance{
 
         class ConstantTexture: public Texture{
             public:
-                ConstantTexture(math::Color3& albedo,math::Vec2 scale = math::Vec2{1,1},math::Vec2 offset = math::Vec2{0,0});
+                ConstantTexture(math::Color3 albedo,math::Vec2 scale = math::Vec2{1,1},math::Vec2 offset = math::Vec2{0,0});
                 math::Color3 getValue(float u,float v,const math::Vec3& point) const override;
 
             private:

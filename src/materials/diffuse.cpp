@@ -3,7 +3,7 @@
 #include <cassert>
 
 materials::Diffuse::Diffuse():
-    Material{nullptr}
+    Material{std::make_shared<radiance::textures::ConstantTexture>(math::Color3{1,1,1})}
 {
 }
 

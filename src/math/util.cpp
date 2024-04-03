@@ -23,3 +23,9 @@ math::Vec3 math::refract(const Vec3 &in, const Vec3 &normal, float indexRatio)
     return in_perp + in_n;
 }
 
+float math::schlick(float cos, float indexRatio)
+{
+    float f0 = (1.0f - indexRatio) / (1.0 + indexRatio);
+    f0 = f0*f0;
+    return f0 + (1.0 - f0)*pow(1.0 - cos,5);
+}

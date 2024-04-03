@@ -25,7 +25,7 @@ math::Color3 radiance::textures::ImageTexture::getValue(float u, float v, const 
     return _image->get(x,y);
 }
 
-radiance::textures::ConstantTexture::ConstantTexture(math::Color3 &albedo,math::Vec2 scale,math::Vec2 offset):
+radiance::textures::ConstantTexture::ConstantTexture(math::Color3 albedo,math::Vec2 scale,math::Vec2 offset):
 Texture(scale,offset),
 _albedo{albedo}
 {

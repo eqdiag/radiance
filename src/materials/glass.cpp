@@ -4,7 +4,7 @@
 #include "math/rand.h"
 
 materials::Glass::Glass(float indexOfRefraction):
-    Material{nullptr},
+    Material{std::make_shared<radiance::textures::ConstantTexture>(math::Color3{1,1,1})},
     _index{indexOfRefraction}
 {
     
