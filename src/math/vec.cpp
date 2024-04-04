@@ -3,221 +3,233 @@
 #include <cassert>
 #include "vec.h"
 
-math::Vec2::Vec2(float x, float y) :
+radiance::math::Vec2::Vec2(float x, float y) :
 	mX{ x }, mY{ y }
 {
 
 }
 
-float math::Vec2::x() const
+float radiance::math::Vec2::x() const
 {
 	return mX;
 }
 
-float math::Vec2::y() const
+float radiance::math::Vec2::y() const
 {
 	return mY;
 }
 
-float math::Vec2::r() const
+float radiance::math::Vec2::r() const
 {
 	return mX;
 }
 
-float math::Vec2::g() const
+float radiance::math::Vec2::g() const
 {
 	return mY;
 }
 
 
-float math::Vec2::operator[](size_t index) const
+float radiance::math::Vec2::operator[](size_t index) const
 {
 	assert(index <= 2);
 	return data[index];
 }
 
-float& math::Vec2::operator[](size_t index)
+float& radiance::math::Vec2::operator[](size_t index)
 {
 	assert(index <= 2);
 	return data[index];
 }
 
 /*Vector space operations*/
-math::Vec2 math::Vec2::operator+(const Vec2& rhs) const {
+radiance::math::Vec2 radiance::math::Vec2::operator+(const Vec2& rhs) const {
 	return Vec2{ mX + rhs.x(),mY + rhs.y()};
 }
 
-math::Vec2 math::Vec2::operator+=(const Vec2& rhs)
+radiance::math::Vec2 radiance::math::Vec2::operator+=(const Vec2& rhs)
 {
 	mX += rhs.x();
 	mY += rhs.y();
 	return *this;
 }
-math::Vec2 math::Vec2::operator-(const Vec2& rhs) const {
+
+radiance::math::Vec2 radiance::math::Vec2::operator-(const Vec2& rhs) const {
 	return Vec2{ mX - rhs.x(),mY - rhs.y() };
 }
 
-math::Vec2 math::Vec2::operator-=(const Vec2& rhs)
+radiance::math::Vec2 radiance::math::Vec2::operator-=(const Vec2& rhs)
 {
 	mX -= rhs.x();
 	mY -= rhs.y();
 	return *this;
 }
 
-math::Vec2 math::Vec2::operator*(const math::Vec2& rhs) const
+radiance::math::Vec2 radiance::math::Vec2::operator*(const math::Vec2& rhs) const
 {
 	return Vec2{mX*rhs.x(),mY*rhs.y()};
 }
 
-math::Vec2 math::Vec2::operator*=(const math::Vec2& rhs)
+radiance::math::Vec2 radiance::math::Vec2::operator*=(const math::Vec2& rhs)
 {
 	mX *= rhs.x();
 	mY *= rhs.y();
 	return *this;
 }
 
-math::Vec2 math::Vec2::operator*(float rhs) const {
+radiance::math::Vec2 radiance::math::Vec2::operator*(float rhs) const {
 	return Vec2{ mX * rhs,mY * rhs };
 
 }
-math::Vec2 math::Vec2::operator*=(float rhs)
+
+radiance::math::Vec2 radiance::math::Vec2::operator*=(float rhs)
 {
 	mX *= rhs;
 	mY *= rhs;
 	return *this;
 }
-math::Vec2 math::Vec2::operator/(float rhs) const {
+radiance::math::Vec2 radiance::math::Vec2::operator/(float rhs) const {
 	return Vec2{ mX / rhs,mY / rhs };
 }
-math::Vec2 math::Vec2::operator/=(float rhs)
+
+radiance::math::Vec2 radiance::math::Vec2::operator/=(float rhs)
 {
 	mX /= rhs;
 	mY /= rhs;
 	return *this;
 }
-bool math::Vec2::operator==(const Vec2& rhs) const
+bool radiance::math::Vec2::operator==(const Vec2& rhs) const
 {
 	return (mX == rhs.x()) && (mY == rhs.y());
 }
-math::Vec2 math::Vec2::operator-() const {
+
+radiance::math::Vec2 radiance::math::Vec2::operator-() const {
 	return Vec2{ -mX,-mY };
 }
 
-float* math::Vec2::getRawData()
+float* radiance::math::Vec2::getRawData()
 {
 	return (float*)data;
 }
 
 /*Inner product and cross product*/
-float math::Vec2::dot(const Vec2& rhs) const {
+float radiance::math::Vec2::dot(const Vec2& rhs) const {
 	return mX * rhs.x() + mY * rhs.y();
 }
 
-float math::Vec2::norm2() const {
+float radiance::math::Vec2::norm2() const {
 	return this->dot(*this);
 }
-float math::Vec2::norm() const {
+
+float radiance::math::Vec2::norm() const {
 	return sqrt(norm2());
 }
-math::Vec2 math::Vec2::normalize() const {
+
+radiance::math::Vec2 radiance::math::Vec2::normalize() const {
 	return *this / norm();
 }
 
-math::Vec2 math::Vec2::min(const Vec2 &rhs) const
+radiance::math::Vec2 radiance::math::Vec2::min(const Vec2 &rhs) const
 {
     return Vec2(fmin(mX,rhs.x()),fmin(mY,rhs.y()));
 }
 
-math::Vec2 math::Vec2::max(const Vec2 &rhs) const
+radiance::math::Vec2 radiance::math::Vec2::max(const Vec2 &rhs) const
 {
     return Vec2(fmax(mX,rhs.x()),fmax(mY,rhs.y()));
 }
 
-std::ostream& math::operator<<(std::ostream& out, const Vec2& v)
+radiance::math::Vec2 radiance::math::Vec2::ZERO()
+{
+    return Vec2{0,0};
+}
+
+std::ostream& radiance::math::operator<<(std::ostream& out, const Vec2& v)
 {
 	return out << "[" << v.x() << "," << v.y() << "]\n";
 }
 
-math::Vec3::Vec3(float x, float y, float z):
+radiance::math::Vec3::Vec3(float x, float y, float z):
 	mX{x},mY{y},mZ{z}
 {
 
 }
 
-float math::Vec3::x() const
+float radiance::math::Vec3::x() const
 {
 	return mX;
 }
 
-float math::Vec3::y() const
+float radiance::math::Vec3::y() const
 {
 	return mY;
 }
 
-float math::Vec3::z() const
+float radiance::math::Vec3::z() const
 {
 	return mZ;
 }
 
-float math::Vec3::r() const
+float radiance::math::Vec3::r() const
 {
 	return mX;
 }
 
-float math::Vec3::g() const
+float radiance::math::Vec3::g() const
 {
 	return mY;
 }
 
-float math::Vec3::b() const
+float radiance::math::Vec3::b() const
 {
 	return mZ;
 }
 
-float math::Vec3::operator[](size_t index) const
+float radiance::math::Vec3::operator[](size_t index) const
 {
 	assert(index <= 3);
 	return data[index];
 }
 
-float& math::Vec3::operator[](size_t index)
+float& radiance::math::Vec3::operator[](size_t index)
 {
 	assert(index <= 3);
 	return data[index];
 }
 
-math::Vec2 math::Vec3::xy() const
+radiance::math::Vec2 radiance::math::Vec3::xy() const
 {
     return math::Vec2{mX,mY};
 }
 
-math::Vec2 math::Vec3::xz() const
+radiance::math::Vec2 radiance::math::Vec3::xz() const
 {
     return math::Vec2{mX,mZ};
 }
 
-math::Vec2 math::Vec3::yz() const
+radiance::math::Vec2 radiance::math::Vec3::yz() const
 {
 	return math::Vec2{mY,mZ};
 }
 
 /*Vector space operations*/
-math::Vec3 math::Vec3::operator+(const Vec3& rhs) const {
+radiance::math::Vec3 radiance::math::Vec3::operator+(const Vec3& rhs) const {
 	return Vec3{ mX + rhs.x(),mY + rhs.y() ,mZ + rhs.z() };
 }
 
-math::Vec3 math::Vec3::operator+=(const Vec3& rhs)
+radiance::math::Vec3 radiance::math::Vec3::operator+=(const Vec3& rhs)
 {
 	mX += rhs.x();
 	mY += rhs.y();
 	mZ += rhs.z();
 	return *this;
 }
-math::Vec3 math::Vec3::operator-(const Vec3& rhs) const {
+
+radiance::math::Vec3 radiance::math::Vec3::operator-(const Vec3& rhs) const {
 	return Vec3{ mX - rhs.x(),mY - rhs.y() ,mZ - rhs.z() };
 }
 
-math::Vec3 math::Vec3::operator-=(const Vec3& rhs)
+radiance::math::Vec3 radiance::math::Vec3::operator-=(const Vec3& rhs)
 {
 	mX -= rhs.x();
 	mY -= rhs.y();
@@ -225,12 +237,12 @@ math::Vec3 math::Vec3::operator-=(const Vec3& rhs)
 	return *this;
 }
 
-math::Vec3 math::Vec3::operator*(const math::Vec3& rhs) const
+radiance::math::Vec3 radiance::math::Vec3::operator*(const math::Vec3& rhs) const
 {
 	return Vec3{mX*rhs.x(),mY*rhs.y(),mZ*rhs.z()};
 }
 
-math::Vec3 math::Vec3::operator*=(const math::Vec3& rhs)
+radiance::math::Vec3 radiance::math::Vec3::operator*=(const math::Vec3& rhs)
 {
 	mX *= rhs.x();
 	mY *= rhs.y();
@@ -238,72 +250,86 @@ math::Vec3 math::Vec3::operator*=(const math::Vec3& rhs)
 	return *this;
 }
 
-math::Vec3 math::Vec3::operator*(float rhs) const {
+radiance::math::Vec3 radiance::math::Vec3::operator*(float rhs) const {
 	return Vec3{ mX*rhs,mY*rhs ,mZ*rhs};
 
 }
-math::Vec3 math::Vec3::operator*=(float rhs)
+
+radiance::math::Vec3 radiance::math::Vec3::operator*=(float rhs)
 {
 	mX *= rhs;
 	mY *= rhs;
 	mZ *= rhs;
 	return *this;
 }
-math::Vec3 math::Vec3::operator/(float rhs) const {
+
+radiance::math::Vec3 radiance::math::Vec3::operator/(float rhs) const {
 	return Vec3{ mX / rhs,mY/ rhs ,mZ/ rhs };
 }
-math::Vec3 math::Vec3::operator/=(float rhs)
+
+radiance::math::Vec3 radiance::math::Vec3::operator/=(float rhs)
 {
 	mX /= rhs;
 	mY /= rhs;
 	mZ /= rhs;
 	return *this;
 }
-bool math::Vec3::operator==(const Vec3& rhs) const
+
+bool radiance::math::Vec3::operator==(const Vec3& rhs) const
 {
 	return (mX == rhs.x()) && (mY == rhs.y()) && (mZ == rhs.z());
 }
-math::Vec3 math::Vec3::operator-() const {
+
+radiance::math::Vec3 radiance::math::Vec3::operator-() const {
 	return Vec3{ -mX,-mY,-mZ };
 }
 
-float* math::Vec3::getRawData()
+float* radiance::math::Vec3::getRawData()
 {
 	return (float*)data;
 }
 
 /*Inner product and cross product*/
-float math::Vec3::dot(const Vec3& rhs) const {
+float radiance::math::Vec3::dot(const Vec3& rhs) const {
 	return mX * rhs.x() + mY * rhs.y() + mZ * rhs.z();
 }
-math::Vec3 math::Vec3::cross(const Vec3& rhs) const {
+
+radiance::math::Vec3 radiance::math::Vec3::cross(const Vec3& rhs) const {
 	return Vec3{
 		mY*rhs.z() - mZ*rhs.y(),
 		mZ*rhs.x() - mX*rhs.z(),
 		mX*rhs.y() - mY*rhs.x()
 	};
 }
-float math::Vec3::norm2() const {
+
+float radiance::math::Vec3::norm2() const {
 	return this->dot(*this);
 }
-float math::Vec3::norm() const {
+
+float radiance::math::Vec3::norm() const {
 	return sqrt(norm2());
 }
-math::Vec3 math::Vec3::normalize() const {
+
+radiance::math::Vec3 radiance::math::Vec3::normalize() const {
 	return *this / norm();
 }
 
-math::Vec3 math::Vec3::min(const Vec3 &rhs) const
+radiance::math::Vec3 radiance::math::Vec3::min(const Vec3 &rhs) const
 {
 	return Vec3(fmin(mX,rhs.x()),fmin(mY,rhs.y()),fmin(mZ,rhs.z()));
 }
 
-math::Vec3 math::Vec3::max(const Vec3 &rhs) const
+radiance::math::Vec3 radiance::math::Vec3::max(const Vec3 &rhs) const
 {
     return Vec3(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()));
 }
 
-std::istream &math::operator>>(std::istream &in, Vec3 &v)
+radiance::math::Vec3 radiance::math::Vec3::ZERO()
+{
+    return Vec3{0,0,0};
+}
+
+std::istream &radiance::math::operator>>(std::istream &in, Vec3 &v)
 {
 	char c;
 	//in >> c;
@@ -316,88 +342,89 @@ std::istream &math::operator>>(std::istream &in, Vec3 &v)
 	return in;
 }
 
-std::ostream &math::operator<<(std::ostream &out, const Vec3 &v)
+std::ostream &radiance::math::operator<<(std::ostream &out, const Vec3 &v)
 {
 	return out << "[" << v.x() << "," << v.y() << "," << v.z() << "]\n";
 }
 
-math::Vec4::Vec4(float x, float y, float z, float w) : mX{x}, mY{y}, mZ{z}, mW{w}
+radiance::math::Vec4::Vec4(float x, float y, float z, float w) : mX{x}, mY{y}, mZ{z}, mW{w}
 {
 
 }
 
-float math::Vec4::x() const
-{
-	return mX;
-}
-
-float math::Vec4::y() const
-{
-	return mY;
-}
-
-float math::Vec4::z() const
-{
-	return mZ;
-}
-
-float math::Vec4::w() const
-{
-	return mW;
-}
-
-float math::Vec4::r() const
+float radiance::math::Vec4::x() const
 {
 	return mX;
 }
 
-float math::Vec4::g() const
+float radiance::math::Vec4::y() const
 {
 	return mY;
 }
 
-float math::Vec4::b() const
+float radiance::math::Vec4::z() const
 {
 	return mZ;
 }
 
-float math::Vec4::a() const
+float radiance::math::Vec4::w() const
 {
 	return mW;
 }
 
-float math::Vec4::operator[](size_t index) const{
+float radiance::math::Vec4::r() const
+{
+	return mX;
+}
+
+float radiance::math::Vec4::g() const
+{
+	return mY;
+}
+
+float radiance::math::Vec4::b() const
+{
+	return mZ;
+}
+
+float radiance::math::Vec4::a() const
+{
+	return mW;
+}
+
+float radiance::math::Vec4::operator[](size_t index) const{
 	assert(index <= 3);
 	return data[index];
 }
 
-float& math::Vec4::operator[](size_t index) {
+float& radiance::math::Vec4::operator[](size_t index) {
 	assert(index <= 3);
 	return data[index];
 }
 
-math::Vec3 math::Vec4::xyz() const
+radiance::math::Vec3 radiance::math::Vec4::xyz() const
 {
     return math::Vec3{mX,mY,mZ};
 }
 
 /*Vector space operations*/
-math::Vec4 math::Vec4::operator+(const Vec4& rhs) const {
+radiance::math::Vec4 radiance::math::Vec4::operator+(const Vec4& rhs) const {
 	return Vec4{ mX + rhs.x(),mY + rhs.y() ,mZ + rhs.z(), mW + rhs.w() };
 }
 
-void math::Vec4::operator+=(const Vec4& rhs)
+void radiance::math::Vec4::operator+=(const Vec4& rhs)
 {
 	mX += rhs.x();
 	mY += rhs.y();
 	mZ += rhs.z();
 	mW += rhs.w();
 }
-math::Vec4 math::Vec4::operator-(const Vec4& rhs) const {
+
+radiance::math::Vec4 radiance::math::Vec4::operator-(const Vec4& rhs) const {
 	return Vec4{ mX - rhs.x(),mY - rhs.y() ,mZ - rhs.z(), mW - rhs.w() };
 }
 
-void math::Vec4::operator-=(const Vec4& rhs)
+void radiance::math::Vec4::operator-=(const Vec4& rhs)
 {
 	mX -= rhs.x();
 	mY -= rhs.y();
@@ -405,12 +432,12 @@ void math::Vec4::operator-=(const Vec4& rhs)
 	mW -= rhs.w();
 }
 
-math::Vec4 math::Vec4::operator*(const math::Vec4& rhs) const
+radiance::math::Vec4 radiance::math::Vec4::operator*(const Vec4& rhs) const
 {
 	return Vec4{mX*rhs.x(),mY*rhs.y(),mZ*rhs.z(),mW*rhs.w()};
 }
 
-math::Vec4 math::Vec4::operator*=(const math::Vec4& rhs)
+radiance::math::Vec4 radiance::math::Vec4::operator*=(const Vec4& rhs)
 {
 	mX *= rhs.x();
 	mY *= rhs.y();
@@ -419,66 +446,76 @@ math::Vec4 math::Vec4::operator*=(const math::Vec4& rhs)
 	return *this;
 }
 
-math::Vec4 math::Vec4::operator*(float rhs) const {
+radiance::math::Vec4 radiance::math::Vec4::operator*(float rhs) const {
 	return Vec4{ mX * rhs,mY * rhs ,mZ * rhs, mW*rhs};
 
 }
-void math::Vec4::operator*=(float rhs)
+void radiance::math::Vec4::operator*=(float rhs)
 {
 	mX *= rhs;
 	mY *= rhs;
 	mZ *= rhs;
 	mW *= rhs;
 }
-math::Vec4 math::Vec4::operator/(float rhs) const {
+
+radiance::math::Vec4 radiance::math::Vec4::operator/(float rhs) const {
 	return Vec4{ mX / rhs,mY / rhs ,mZ / rhs,mW / rhs };
 }
-void math::Vec4::operator/=(float rhs)
+void radiance::math::Vec4::operator/=(float rhs)
 {
 	mX /= rhs;
 	mY /= rhs;
 	mZ /= rhs;
 	mW /= rhs;
 }
-bool math::Vec4::operator==(const Vec4& rhs) const
+
+bool radiance::math::Vec4::operator==(const Vec4& rhs) const
 {
 	return (mX == rhs.x()) && (mY == rhs.y()) && (mZ == rhs.z()) && (mW == rhs.w());
 }
-math::Vec4 math::Vec4::operator-() const {
+
+radiance::math::Vec4 radiance::math::Vec4::operator-() const {
 	return Vec4{ -mX,-mY,-mZ, -mW};
 }
 
-float* math::Vec4::getRawData()
+float* radiance::math::Vec4::getRawData()
 {
 	return (float*)data;
 }
 
 /*Inner product and cross product*/
-float math::Vec4::dot(const Vec4& rhs) const {
+float radiance::math::Vec4::dot(const Vec4& rhs) const {
 	return mX * rhs.x() + mY * rhs.y() + mZ * rhs.z() + mW*rhs.w();
 }
 
-float math::Vec4::norm2() const {
+float radiance::math::Vec4::norm2() const {
 	return this->dot(*this);
 }
-float math::Vec4::norm() const {
+
+float radiance::math::Vec4::norm() const {
 	return sqrt(norm2());
 }
-math::Vec4 math::Vec4::normalize() const {
+
+radiance::math::Vec4 radiance::math::Vec4::normalize() const {
 	return *this / norm();
 }
 
-math::Vec4 math::Vec4::min(const Vec4 &rhs) const
+radiance::math::Vec4 radiance::math::Vec4::min(const Vec4 &rhs) const
 {
 	return Vec4(fmin(mX,rhs.x()),fmin(mY,rhs.y()),fmin(mZ,rhs.z()),fmin(mW,rhs.w()));
 }
 
-math::Vec4 math::Vec4::max(const Vec4 &rhs) const
+radiance::math::Vec4 radiance::math::Vec4::max(const Vec4 &rhs) const
 {
     return Vec4(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()),fmax(mW,rhs.w()));
 }
 
-std::ostream& math::operator<<(std::ostream& out, const Vec4& v)
+radiance::math::Vec4 radiance::math::Vec4::ZERO()
+{
+    return Vec4{0,0,0,0};
+}
+
+std::ostream& radiance::math::operator<<(std::ostream& out, const Vec4& v)
 {
 	return out << "[" << v.x() << "," << v.y() << "," << v.z() << "," << v.w() <<  "]\n";
 }

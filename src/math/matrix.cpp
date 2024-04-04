@@ -1,9 +1,9 @@
-#include "math/matrix.h"
+#include "matrix.h"
 
 #include <cassert>
 #include <cmath>
 
-math::Mat4::Mat4(
+radiance::math::Mat4::Mat4(
 	float m11, float m12, float m13, float m14,
 	float m21, float m22, float m23, float m24,
 	float m31, float m32, float m33, float m34,
@@ -18,26 +18,26 @@ math::Mat4::Mat4(
 
 }
 
-math::Mat4::Mat4(const Vec4& c0, const Vec4& c1, const Vec4& c2, const Vec4& c3):
+radiance::math::Mat4::Mat4(const Vec4& c0, const Vec4& c1, const Vec4& c2, const Vec4& c3):
 	cols{c0,c1,c2,c3}
 {
 
 }
 
 
-math::Vec4 math::Mat4::operator[](size_t index) const
+radiance::math::Vec4 radiance::math::Mat4::operator[](size_t index) const
 {
 	assert(index <= 3);
 	return cols[index];
 }
 
-math::Vec4& math::Mat4::operator[](size_t index)
+radiance::math::Vec4& radiance::math::Mat4::operator[](size_t index)
 {
 	assert(index <= 3);
 	return cols[index];
 }
 
-math::Mat4 math::Mat4::operator+(const Mat4& rhs) const
+radiance::math::Mat4 radiance::math::Mat4::operator+(const Mat4& rhs) const
 {
 	return Mat4{
 		cols[0] + rhs[0],
@@ -47,7 +47,7 @@ math::Mat4 math::Mat4::operator+(const Mat4& rhs) const
 	};
 }
 
-math::Mat4 math::Mat4::operator-(const Mat4& rhs) const
+radiance::math::Mat4 radiance::math::Mat4::operator-(const Mat4& rhs) const
 {
 	return Mat4{
 		cols[0] - rhs[0],
@@ -57,7 +57,7 @@ math::Mat4 math::Mat4::operator-(const Mat4& rhs) const
 	};
 }
 
-math::Vec4 math::Mat4::operator*(const Vec4& rhs) const
+radiance::math::Vec4 radiance::math::Mat4::operator*(const Vec4& rhs) const
 {
 	return math::Vec4{
 		Vec4{cols[0][0],cols[1][0],cols[2][0],cols[3][0]}.dot(rhs),
@@ -67,7 +67,7 @@ math::Vec4 math::Mat4::operator*(const Vec4& rhs) const
 	};
 }
 
-math::Mat4 math::Mat4::operator*(const Mat4& rhs) const
+radiance::math::Mat4 radiance::math::Mat4::operator*(const Mat4& rhs) const
 {
 	return Mat4{
 		(*this) * rhs[0],
@@ -77,7 +77,7 @@ math::Mat4 math::Mat4::operator*(const Mat4& rhs) const
 	};
 }
 
-math::Mat4 math::Mat4::operator*(const float rhs) const
+radiance::math::Mat4 radiance::math::Mat4::operator*(const float rhs) const
 {
 
 	return Mat4{
@@ -88,7 +88,7 @@ math::Mat4 math::Mat4::operator*(const float rhs) const
 	};
 }
 
-math::Mat4 math::Mat4::transpose() const
+radiance::math::Mat4 radiance::math::Mat4::transpose() const
 {
 	Mat4 m{};
 	for (int i = 0; i < 4; i++) {
@@ -100,17 +100,17 @@ math::Mat4 math::Mat4::transpose() const
 }
 
 
-float* math::Mat4::getRawData()
+float* radiance::math::Mat4::getRawData()
 {
 	return (float*)data;
 }
 
-math::Mat4 math::Mat4::identity()
+radiance::math::Mat4 radiance::math::Mat4::identity()
 {
 	return Mat4{};
 }
 
-math::Mat4 math::Mat4::lookAt(const Vec3& eye, const Vec3& center, const Vec3& up)
+radiance::math::Mat4 radiance::math::Mat4::lookAt(const Vec3& eye, const Vec3& center, const Vec3& up)
 {
 	auto front = (center - eye).normalize();
 	auto right = front.cross(up).normalize();
@@ -124,7 +124,7 @@ math::Mat4 math::Mat4::lookAt(const Vec3& eye, const Vec3& center, const Vec3& u
 	return m;
 }
 
-math::Mat4 math::Mat4::fromScale(const Vec3& v) 
+radiance::math::Mat4 radiance::math::Mat4::fromScale(const Vec3& v) 
 {
 	return Mat4{
 		Vec4{v.x(),0.0,0.0,0.0},
@@ -134,7 +134,7 @@ math::Mat4 math::Mat4::fromScale(const Vec3& v)
 	};
 }
 
-math::Mat4 math::Mat4::fromScale(float x, float y, float z) 
+radiance::math::Mat4 radiance::math::Mat4::fromScale(float x, float y, float z) 
 {
 	return Mat4{
 		Vec4{x,0.0,0.0,0.0},
@@ -144,7 +144,7 @@ math::Mat4 math::Mat4::fromScale(float x, float y, float z)
 	};
 }
 
-math::Mat4 math::Mat4::fromRotateXAxis(float angle)
+radiance::math::Mat4 radiance::math::Mat4::fromRotateXAxis(float angle)
 {
 	float c = cos(angle);
 	float s = sin(angle);
@@ -157,7 +157,7 @@ math::Mat4 math::Mat4::fromRotateXAxis(float angle)
 	};
 }
 
-math::Mat4 math::Mat4::fromRotateYAxis(float angle)
+radiance::math::Mat4 radiance::math::Mat4::fromRotateYAxis(float angle)
 {
 	float c = cos(angle);
 	float s = sin(angle);
@@ -170,7 +170,7 @@ math::Mat4 math::Mat4::fromRotateYAxis(float angle)
 	};
 }
 
-math::Mat4 math::Mat4::fromRotateZAxis(float angle)
+radiance::math::Mat4 radiance::math::Mat4::fromRotateZAxis(float angle)
 {
 	float c = cos(angle);
 	float s = sin(angle);
@@ -182,7 +182,7 @@ math::Mat4 math::Mat4::fromRotateZAxis(float angle)
 	};
 }
 
-math::Mat4 math::Mat4::fromAxisAngle(float angle, const Vec3& axis) 
+radiance::math::Mat4 radiance::math::Mat4::fromAxisAngle(float angle, const Vec3& axis) 
 {
 	float s = sin(angle);
 	//float c = sqrt(1.0f - s*s);
@@ -206,7 +206,7 @@ math::Mat4 math::Mat4::fromAxisAngle(float angle, const Vec3& axis)
 }
 
 
-math::Mat4 math::Mat4::fromTranslation(const Vec3& v) 
+radiance::math::Mat4 radiance::math::Mat4::fromTranslation(const Vec3& v) 
 {
 	return Mat4{
 		Vec4{1.0,0.0,0.0,0.0},
@@ -216,7 +216,7 @@ math::Mat4 math::Mat4::fromTranslation(const Vec3& v)
 	};
 }
 
-math::Mat4 math::Mat4::fromTranslation(float x, float y, float z) 
+radiance::math::Mat4 radiance::math::Mat4::fromTranslation(float x, float y, float z) 
 {
 	return Mat4{
 		Vec4{1.0,0.0,0.0,0.0},
@@ -226,7 +226,7 @@ math::Mat4 math::Mat4::fromTranslation(float x, float y, float z)
 	};
 }
 
-math::Mat4 math::Mat4::orthographicProjection(float left, float right, float bottom, float top, float near, float far)
+radiance::math::Mat4 radiance::math::Mat4::orthographicProjection(float left, float right, float bottom, float top, float near, float far)
 {
 	Mat4 m{};
 	m[0][0] = 2.0f / (right - left);
@@ -238,7 +238,7 @@ math::Mat4 math::Mat4::orthographicProjection(float left, float right, float bot
 	return m;
 }
 
-math::Mat4 math::Mat4::perspectiveProjection(float fovy, float aspectRatio, float near, float far)
+radiance::math::Mat4 radiance::math::Mat4::perspectiveProjection(float fovy, float aspectRatio, float near, float far)
 {
 	Mat4 m{};
 	float ty = tan(fovy * 0.5);
@@ -253,7 +253,7 @@ math::Mat4 math::Mat4::perspectiveProjection(float fovy, float aspectRatio, floa
 	return m;
 }
 
-std::ostream& math::operator<<(std::ostream& out, const Mat4& v)
+std::ostream& radiance::math::operator<<(std::ostream& out, const Mat4& v)
 {
 	out << "| " << v[0][0] << " " << v[1][0] << " " << v[2][0] << " " << v[3][0] << " |\n";
 	out << "| " << v[0][1] << " " << v[1][1] << " " << v[2][1] << " " << v[3][1] << " |\n";

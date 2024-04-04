@@ -4,28 +4,26 @@
 
 #include "matrix.h"
 
+namespace radiance{
 
-namespace math{
+    namespace math{
 
-    class Transform{
-        public:
+        class Transform{
+            public:
 
-    
-            Transform& scale(math::Vec3& s);
-            Transform& translate(math::Vec3 t);
-            Transform& rotate(float angle,math::Vec3& axis);
-            Transform& matrix(math::Mat4& matrix);
+        
+                Transform& scale(Vec3& s);
+                Transform& translate(Vec3 t);
+                Transform& rotate(float angle,Vec3& axis);
 
-            math::Mat4 getMatrix() const;
-            math::Mat4 getInverseMatrix() const;
-            
-            friend std::ostream& operator<<(std::ostream& out, const Transform& v);
+                Mat4 matrix{};
+                Mat4 inverse{};
+                
+                friend std::ostream& operator<<(std::ostream& out, const Transform& v);
 
+             
+        };
 
-        private:
-            math::Mat4 _matrix{};
-            math::Mat4 _inverse{};
-    };
-
+    }
 
 }

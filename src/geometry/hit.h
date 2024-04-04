@@ -1,76 +1,43 @@
 #pragma once
 
 #include "math/vec.h"
-
 #include "math/ray.h"
-#include "math/transform.h"
-#include "geometry/aabb.h"
 
-#include <optional>
-
-//Forward dec
-namespace materials{
-    class Material;
-}
-
+#include <vector>
 
 namespace radiance{
 
     namespace geometry{
 
         struct Hit{
-            math::Vec3 point{};
-            math::Vec3 normal{};
-            //Hit from outside, or inside
-            bool outside{};
             float t;
-            //Texture coordinates
-            math::Vec2 uv;
-            std::shared_ptr<materials::Material> _material{};
+            math::Vec3 p;
+            math::Vec3 n;
+            bool outside;
 
-            void setFaceNormal(const math::Vec3& in,const math::Vec3& n);
-
+            void setNormal(const radiance::math::Ray& ray,const radiance::math::Vec3 normal);
         };
 
-        struct Vertex{
-            math::Vec3 position;
-            math::Vec3 normal;
-            math::Vec2 uv;
-        };
-
-        
         class Hittable{
             public:
-                virtual bool trace(const math::Ray&,Hit&,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const = 0;
-                virtual bool getBoundingBox(radiance::geometry::AABB& box) const = 0;
-                //Some hittable objects may contain many `subprimitives` (e.g. triangle mesh, others might not e.g. sphere)
-                virtual std::optional<std::vector<std::shared_ptr<geometry::Hittable>>> getPrimitives(const math::Transform& transform = math::Transform{});
 
-
-                virtual void setMaterial(std::shared_ptr<materials::Material> material);
-
-                std::shared_ptr<materials::Material> _material{};
-
-            protected:
+                //Determine if ray hits an object
+                //Should nly return true if t in [tmin,tmax]
+                virtual bool trace(const math::Ray& ray,Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const = 0;
         };
 
-        class InstancedHittable: public Hittable{
-            public:
-                InstancedHittable(std::shared_ptr<Hittable> object,math::Transform transform);
 
-                void computeBoundingBox();
+        class HitList: Hittable{
+            public:
+                HitList();
+
+                void addObject(std::shared_ptr<Hittable> object);
 
                 bool trace(const math::Ray& ray,Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
-                bool getBoundingBox(radiance::geometry::AABB& box) const override;
-                std::optional<std::vector<std::shared_ptr<geometry::Hittable>>> getPrimitives(const math::Transform& transform = math::Transform{}) override;
-                void setMaterial(std::shared_ptr<materials::Material> material) override;
-
 
             private:
-                std::shared_ptr<Hittable> _object;
-                math::Transform _transform;
-
-                geometry::AABB _box{};
+                std::vector<std::shared_ptr<Hittable>> objects;
         };
+
     }
 }

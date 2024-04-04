@@ -48,8 +48,6 @@ file(GLOB src
     "src/lights/*.cpp"
     "src/materials/*.cpp"
     "src/math/*.cpp"
-    "src/misc/*.cpp"
-    "src/scene/*.cpp"
     "external/tiny_obj/tiny_obj_loader.cpp"
     "external/tiny_exr/miniz.c"
 )

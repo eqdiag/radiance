@@ -1,80 +1,44 @@
 #include "hit.h"
-#include <cassert>
 
-void radiance::geometry::Hit::setFaceNormal(const math::Vec3 &in, const math::Vec3 &n)
+#include <optional>
+
+void radiance::geometry::Hit::setNormal(const radiance::math::Ray &ray, const radiance::math::Vec3 normal)
 {
-    outside = in.dot(n) < 0.0f;
-    normal = outside ? n : -n;
+    outside = ray.v.dot(normal) < 0.0f;
+    n = outside ? normal : -normal;
 }
 
-std::optional<std::vector<std::shared_ptr<radiance::geometry::Hittable>>> radiance::geometry::Hittable::getPrimitives(const math::Transform& transform)
-{
-    return std::nullopt;
+radiance::geometry::HitList::HitList(){
+
 }
 
-void radiance::geometry::Hittable::setMaterial(std::shared_ptr<materials::Material> material)
+
+void radiance::geometry::HitList::addObject(std::shared_ptr<Hittable> object)
 {
-    _material = material;
+    objects.push_back(object);
 }
 
-radiance::geometry::InstancedHittable::InstancedHittable(std::shared_ptr<Hittable> object, math::Transform transform):
-_object{object},
-_transform{transform}
-{
-    computeBoundingBox();
-}
+bool radiance::geometry::HitList::trace(const math::Ray& ray,Hit& hit,float tmin,float tmax) const{
 
-void radiance::geometry::InstancedHittable::computeBoundingBox()
-{
-    radiance::geometry::AABB base_box{};
-    auto matrix = _transform.getMatrix();
-    if(_object->getBoundingBox(base_box)){
-        _box.min = (matrix * math::Vec4{base_box.min.x(),base_box.min.y(),base_box.min.z(),1.0}).xyz();
-        _box.min = (matrix * math::Vec4{base_box.max.x(),base_box.max.y(),base_box.max.z(),1.0}).xyz();
+    std::optional<Hit> closest{};
+
+    for(const auto& obj: objects){
+        Hit new_hit{};
+        if(obj->trace(ray,new_hit,tmin,tmax)){
+            if(closest.has_value()){
+                if(new_hit.t < closest.value().t){
+                    closest = new_hit;
+                }
+            }else{
+                closest = new_hit;
+            }
+        }
     }
-}
 
-bool radiance::geometry::InstancedHittable::trace(const math::Ray &ray, Hit &hit, float tmin, float tmax) const
-{
-    auto inverse = _transform.getInverseMatrix();
-    auto old_p = ray.getSrc();
-    auto old_v = ray.getDir();
+    if(closest.has_value()){
+        hit = closest.value();
+        return true;
+    }
 
-    auto new_p = (inverse * math::Vec4{old_p.x(),old_p.y(),old_p.z(),1.0}).xyz();
-    auto new_v = (inverse * math::Vec4{old_v.x(),old_v.y(),old_v.z(),0.0}).xyz();
-
-    math::Ray new_ray{new_p,new_v};
-    
-    if(!_object->trace(new_ray,hit,tmin,tmax)) return false;
-
-    //Otherwise, if hit, then make sure to update p and normals
-    auto matrix = _transform.getMatrix();
-    auto inverse_transpose = inverse.transpose();
-
-    hit.point = (matrix * math::Vec4{hit.point.x(),hit.point.y(),hit.point.z(),1.0}).xyz();
-    hit.normal = (inverse_transpose * math::Vec4{hit.normal.x(),hit.normal.y(),hit.normal.z(),0.0}).xyz().normalize();
-   
-
-    hit._material = _material;
-
-    return true;
-}
-
-bool radiance::geometry::InstancedHittable::getBoundingBox(radiance::geometry::AABB &box) const
-{
-    box = _box;
-    return true;
-}
-
-std::optional<std::vector<std::shared_ptr<radiance::geometry::Hittable>>> radiance::geometry::InstancedHittable::getPrimitives(const math::Transform &transform)
-{
-    auto transformed_objects = _object->getPrimitives(_transform);
-    if(!transformed_objects.has_value()) return std::nullopt;
-    return transformed_objects;
-}
-
-void radiance::geometry::InstancedHittable::setMaterial(std::shared_ptr<materials::Material> material)
-{
-    _material = material;
-    _object->setMaterial(material);
+    return false;
 }
