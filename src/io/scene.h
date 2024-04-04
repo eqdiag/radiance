@@ -35,6 +35,10 @@ namespace radiance{
             std::string materialId;
         };
 
+        struct LightPararams{
+            std::optional<std::shared_ptr<geometry::Hittable>> object;
+        };
+
         class SceneParser{
             public:
                 SceneParser();

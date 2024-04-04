@@ -58,8 +58,11 @@ All dependencies are self-contained in this project using git's submodule system
 
 - [x] fresnel reflection
 - [ ] area lights
-    - [ ] plastic material inline
-    - [ ] triangle area light
+    - [ ] hittable sample function (should return prob of sample)
+    - [ ] make area light type
+    - [ ] make diffuse light type (has reflectivity + light intensity)
+    - [ ] obj -> material
+    - [ ] light -> obj ref
 
 - [ ] perlin noise
 - [ ] volumes
