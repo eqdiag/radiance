@@ -29,6 +29,28 @@ radiance::cameras::Perspective::Perspective
 
 }
 
+radiance::cameras::Perspective radiance::cameras::Perspective::lookAt(
+    float aspect_ratio,
+    float vfov,
+    int width,
+    math::Vec3 from,
+    math::Vec3 at,
+    math::Vec3 up,
+    float focalLength)
+{
+    return Perspective{
+        2.0f * focalLength * static_cast<float>(tan(math::degToRad(vfov)*0.5)),
+        2.0f * focalLength * static_cast<float>(tan(math::degToRad(vfov)*0.5)) / aspect_ratio,
+        width,
+        static_cast<int>(width / aspect_ratio),
+        from,
+        (at - from).cross(up).normalize(),
+        (at - from).cross(up).cross(at - from).normalize(),
+        (at - from).normalize(),
+        focalLength
+    };
+}
+
 radiance::math::Ray radiance::cameras::Perspective::generateRay(int i, int j) const
 {
     //Randomly sample in pixel

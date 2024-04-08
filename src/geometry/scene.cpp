@@ -1,16 +1,42 @@
 #include "scene.h"
+#include "materials/material.h"
+#include "acceleration/bvh.h"
 
-
-
-radiance::geometry::Scene::Scene(HitList && objects):
-    objects{objects}
-{
-
+radiance::geometry::Scene::Scene(HitList&& hitList,bool buildBVH)
+{   
+    if(buildBVH){
+        sceneRoot = std::make_shared<acceleration::BVHNode>(hitList.objects);
+    }else{
+        sceneRoot = std::make_shared<geometry::HitList>(std::move(hitList));
+    }
 }
 
-bool radiance::geometry::Scene::trace(const math::Ray &ray, Hit &hit, float tmin, float tmax) const
+radiance::math::Color3 radiance::geometry::Scene::radiance(const math::Ray &ray, int depth, float bounceOffset)
 {
-    return objects.trace(ray,hit,tmin,tmax);
+    if(depth <= 0){
+        return math::BLACK;
+    }
+
+
+    geometry::Hit hit{};
+    //Check if ray hits something
+    if(sceneRoot->trace(ray,hit,bounceOffset)){
+
+        math::Color3 color = math::BLACK;
+
+        //TODO: Add emittance
+
+
+        //Multi-bounce loop
+        math::Color3 reflectance{};
+        math::Ray out{};
+        if(hit.material->bounce(ray,hit,reflectance,out)){
+            return reflectance * radiance(out,depth-1,bounceOffset);
+        }
+
+    }
+
+    return background(ray);
 }
 
 void radiance::geometry::Scene::render(io::Image<math::Color3> &image,const cameras::Perspective& camera, int samplesPerPixel, int maxBounces, float bounceOffset)
@@ -19,19 +45,13 @@ void radiance::geometry::Scene::render(io::Image<math::Color3> &image,const came
     for(int i = 0;i < image.height;i++){
         for(int j= 0;j< image.width;j++){
 
-            //auto film_pt = corner + dx*j + dy*i;
-
-            //auto ray = radiance::math::Ray{eye,(film_pt - eye)};
+    
             auto ray = camera.generateRay(i,j);
 
             auto final_color = radiance::math::BLACK;
 
             for(int k = 0;k < samplesPerPixel;k++){
-                auto color = background(ray);
-                radiance::geometry::Hit hit{};
-                if(objects.trace(ray,hit)){
-                    color = (hit.n+radiance::math::Vec3{1,1,1})*.5;
-                }
+                auto color = radiance(ray,maxBounces,bounceOffset);
                 final_color += color;
             }
             final_color /= static_cast<float>(samplesPerPixel);

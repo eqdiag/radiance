@@ -1,8 +1,11 @@
 #include "ray.h"
 
-radiance::math::Ray::Ray(Vec3 src, Vec3 dir):
-    p{src},
-    v{dir.normalize()}
+radiance::math::Ray::Ray()
+{
+}
+
+radiance::math::Ray::Ray(Vec3 src, Vec3 dir) : p{src},
+                                               v{dir.normalize()}
 {
     
 }

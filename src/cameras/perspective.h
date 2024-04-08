@@ -29,6 +29,17 @@ namespace radiance{
                     float focalLength = 1.0f
                 );
 
+                //Create camera based on look location
+                //vfov: vertical fov in degrees
+                static Perspective lookAt(
+                    float aspect_ratio,
+                    float vfov,
+                    int width,
+                    math::Vec3 from = radiance::math::Vec3{0,0,0},
+                    math::Vec3 at = radiance::math::Vec3{0,0,-1},
+                    math::Vec3 up = radiance::math::Vec3{0,1,0},
+                    float focalLength = 1.0f
+                );
 
 
                 radiance::math::Ray generateRay(int i,int j) const;

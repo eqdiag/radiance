@@ -16,6 +16,8 @@ All dependencies are self-contained in this project using git's submodule system
 
 
 ## Features
+
+### P1
 - [x] vecs
 - [x] rays
 - [x] ppm
@@ -24,11 +26,31 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] hittable list
 - [x] camera
 - [x] multiple samples per pixel
-- [ ] diffuse
-- [ ] gamma correction
-- [ ] metal
-- [ ] dieletric
+- [x] diffuse
+- [x] gamma correction
+- [x] mirror
+- [x] dieletric
+
+### P2
+- [x] bounding boxes
+- [x] bvh
+    - [x] from hitlist
+    - [x] from list of hittables
+- [ ] textures 
+    - [x] have an image
+    - [x] read from png
+    - [x] read from exr
 - [ ] write to png
+
+
+- [ ] triangles
+- [ ] load obj
+- [ ] instancing (make an instance hittable)
+- [ ] plastic material (outside glass, inside diffuse)
+- [ ] glossy material
+
+
+### P3
 - [ ] replace floats with Real
 
 

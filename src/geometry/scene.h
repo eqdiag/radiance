@@ -13,12 +13,12 @@ namespace radiance{
 
     namespace geometry{
 
-        class Scene: Hittable{    
+        class Scene{    
             public:
 
-                Scene(HitList&& objects);
+                Scene(HitList&& hitList,bool buildBHV = false);
 
-                bool trace(const math::Ray& ray,Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const;
+                math::Color3 radiance(const math::Ray& ray,int depth,float bounceOffset);
 
                 void render(io::Image<math::Color3>& image,const cameras::Perspective& camera, int samplesPerPixel,int maxBounces,float bounceOffset = 0.0001);
 
@@ -27,8 +27,7 @@ namespace radiance{
 
                 radiance::math::Color3 background(const radiance::math::Ray& ray) const;
 
-
-                HitList objects{};
+                std::shared_ptr<geometry::Hittable> sceneRoot{};
         };
     }
 }

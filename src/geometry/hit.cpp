@@ -12,10 +12,21 @@ radiance::geometry::HitList::HitList(){
 
 }
 
+radiance::geometry::HitList::HitList(HitList &&rhs):
+    objects{rhs.objects}
+{
+    
+}
 
 void radiance::geometry::HitList::addObject(std::shared_ptr<Hittable> object)
 {
     objects.push_back(object);
+}
+
+bool radiance::geometry::HitList::boundingBox(geometry::AABB &box) const
+{
+    //TODO:
+    return true;
 }
 
 bool radiance::geometry::HitList::trace(const math::Ray& ray,Hit& hit,float tmin,float tmax) const{

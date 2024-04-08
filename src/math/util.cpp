@@ -30,6 +30,11 @@ float radiance::math::schlick(float cos, float indexRatio)
     return f0 + (1.0 - f0)*pow(1.0 - cos,5);
 }
 
+radiance::math::Vec3 radiance::math::schlick(float cos, Vec3 R0)
+{
+    return R0 + (math::Vec3{1,1,1} - R0)*pow(1.0 - cos,5);
+}
+
 void radiance::math::initRandom()
 {
     srand (static_cast<unsigned> (time(0)));
@@ -55,6 +60,37 @@ radiance::math::Vec3 radiance::math::randomUnitDisk()
         auto v = math::Vec3{randomFloat(-1,1),randomFloat(-1,1)};
         if(v.dot(v) < 1.0f) return v;
     }
+}
+
+radiance::math::Vec3 radiance::math::randomUnitSphere()
+{
+    while(true){
+        auto v = math::Vec3{randomFloat(-1,1),randomFloat(-1,1),randomFloat(-1,1)};
+        if(v.norm2() <= 1.0f) return v;
+    };
+}
+
+radiance::math::Vec3 radiance::math::randomOnUnitSphere()
+{
+    return randomUnitSphere().normalize();
+}
+
+radiance::math::Vec3 radiance::math::randomOnUnitHemisphere(const math::Vec3 &n)
+{
+    while(true){
+        auto v = randomOnUnitSphere();
+        if(v.dot(n) >= 0.0 ) return v;
+    };
+}
+
+float radiance::math::linearToGamma(float value, float gamma)
+{
+    return sqrt(value);
+}
+
+radiance::math::Color3 radiance::math::linearToGamma(Color3 value, float gamma)
+{
+    return math::Color3{linearToGamma(value.x(),gamma),linearToGamma(value.y(),gamma),linearToGamma(value.z(),gamma)};
 }
 
 void radiance::math::Timer::setName(const char *name)

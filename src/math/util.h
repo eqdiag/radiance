@@ -23,8 +23,14 @@ namespace radiance{
         //Also assumes both vectors are normalized */
         Vec3 refract(const Vec3& in,const Vec3& normal,float indexRatio);
 
-        //Schlick approximation for total internal reflection
+        //Schlick approximation for fresnel equations
+        //Compute R0 based on indexRatio
         float schlick(float cos,float indexRatio);
+
+        //Schlick approximation for fresnel equations
+        //Uses R0 explicitly instead of index of refraction
+        Vec3 schlick(float cos,Vec3 R0);
+
 
         /* Misc random */
 
@@ -34,9 +40,27 @@ namespace radiance{
 
         int randInt(int min,int max);
 
-        /* Uses rejection sampling to get a point in unit disk*/
+        // Uses rejection sampling to get a point in unit disk
         /*Note: z coordinate is 0*/
         Vec3 randomUnitDisk();
+
+
+        //Uses rejection sampling
+        //Returns v such that ||v|| <= 1
+        Vec3 randomUnitSphere();
+
+        //Uses rejection sampling
+        //Returns v such that ||v|| = 1
+        Vec3 randomOnUnitSphere();
+
+        //Uses rejection sampling
+        //Returns v such that v.dot(n) >= 0
+        Vec3 randomOnUnitHemisphere(const math::Vec3& n);
+
+
+        float linearToGamma(float value, float gamma);
+
+        Color3 linearToGamma(Color3 value,float gamma);
 
 
         /* Timing */

@@ -28,8 +28,8 @@ namespace radiance{
                 }
 
                 void resize(int width,int height){
-                    width = width;
-                    height = height;
+                    this->width = width;
+                    this->height = height;
                     data.resize(width*height);
                 }
 
@@ -37,8 +37,16 @@ namespace radiance{
                     data[i*width +j] = value;
                 }
 
+                void write(int i,T value){
+                    data[i] = value;
+                }
+
                 T read(int i,int j) const{
                     return data[i*width+j];
+                }
+
+                T read(int i) const{
+                    return data[i];
                 }
 
                 int width,height;
@@ -49,12 +57,17 @@ namespace radiance{
 
         /* Reads */
 
+        bool readRGBImageFromPNG(Image<math::Color3>& image,const char* filename);
+
+        bool readRGBImageFromEXR(Image<math::Color3>& image,const char* filename);
+
+
 
         /* Writes */
 
         bool writeRGBImageToPPM(const Image<math::Color3> &image,const char* filename);
 
-
+        bool writeRGBImageToPNG(const Image<math::Color3>& image,const char* filename);
      
         
        

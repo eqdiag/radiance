@@ -1,10 +1,17 @@
 #include "sphere.h"
 
-radiance::geometry::Sphere::Sphere(math::Vec3 center, float radius):
-    _center{center},
-    _radius{radius}
-{
+#include "math/util.h"
 
+radiance::geometry::Sphere::Sphere(math::Vec3 center, float radius,std::shared_ptr<materials::Material> material):
+    _center{center},
+    _radius{radius},
+    material{material},
+    box{
+        _center - math::Vec3{radius,radius,radius},
+        _center + math::Vec3{radius,radius,radius}
+    }
+{
+   
 }
 
 bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit& hit,float tmin,float tmax) const
@@ -27,6 +34,10 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit& hit,float tmin,
         hit.p = ray.cast(t);
         auto n = (hit.p - _center) / _radius;
         hit.setNormal(ray,n);
+        hit.material = material;
+        auto uv = pointToUV(hit.p);
+        hit.u = uv.x();
+        hit.v = uv.y();
         return true;
     }
 
@@ -36,8 +47,25 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit& hit,float tmin,
         hit.p = ray.cast(t);
         auto n = (hit.p - _center) / _radius;
         hit.setNormal(ray,n);
+        hit.material = material;
+        auto uv = pointToUV(hit.p);
+        hit.u = uv.x();
+        hit.v = uv.y();
         return true;
     }
 
     return false;    
+}
+
+bool radiance::geometry::Sphere::boundingBox(geometry::AABB &outBox) const
+{
+    outBox = box;
+    return true;
+}
+
+radiance::math::Vec2 radiance::geometry::Sphere::pointToUV(const math::Vec3 &p) const
+{
+    float phi = acos(p.y());
+    float theta = atan2(-p.z(),p.x()) + math::PI;
+    return math::Vec2{theta / math::TWO_PI,phi / math::PI};
 }

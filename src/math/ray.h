@@ -8,6 +8,7 @@ namespace radiance{
 
         struct Ray{
             public:
+                Ray();
                 Ray(Vec3 src,Vec3 dir);
                 Vec3 cast(float t) const;
 
