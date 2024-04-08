@@ -59,6 +59,8 @@ namespace radiance{
 
         bool readRGBImageFromPNG(Image<math::Color3>& image,const char* filename);
 
+        bool readRGBImageFromJPG(Image<math::Color3>& image,const char* filename);
+
         bool readRGBImageFromEXR(Image<math::Color3>& image,const char* filename);
 
 

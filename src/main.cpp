@@ -141,12 +141,14 @@ radiance::geometry::Scene scene4(){
     auto left = std::make_shared<radiance::materials::Glass>(1.5);
 
     std::string texture_path = TEXTURE_DIR + std::string{"grid.exr"};
-    radiance::io::Image<radiance::math::Color3> image{};
-    if(!radiance::io::readRGBImageFromEXR(image,texture_path.c_str())){
+    auto image = std::make_shared<radiance::io::Image<radiance::math::Color3>>();
+    std::cout << texture_path << std::endl;
+    if(!radiance::io::readRGBImageFromEXR(*image,texture_path.c_str())){
         std::cerr << "Failed to load: " << texture_path << std::endl;
     }
 
-    auto texture = std::make_shared<radiance::materials::ImageTexture>(std::move(image));
+
+    auto texture = std::make_shared<radiance::materials::ImageTexture>(image);
     
 
     auto center = std::make_shared<radiance::materials::Diffuse>(texture);
@@ -194,12 +196,17 @@ int main(int argc,char** argv){
 
     radiance::math::initRandom();
 
+    radiance::geometry::Sphere s{radiance::math::Vec3{0,0,0},1.0,nullptr};
+
+    std::cout << s.pointToUV(radiance::math::Vec3{0,-1,1}.normalize()) << std::endl;
+
+
 
     //Image
     float aspect = 16.0/9.0;
     int width = 400;
     int height = static_cast<int>(width / aspect);
-    int spp = 10;
+    int spp = 100;
     int max_rays = 100;
     float bounce_offset = 0.0001;
     radiance::io::Image<radiance::math::Color3> out_image{width,height};

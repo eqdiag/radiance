@@ -25,11 +25,11 @@ namespace radiance{
 
         class ImageTexture: public Texture{
             public:
-                ImageTexture(const io::Image<math::Color3>&& image);
+                ImageTexture(std::shared_ptr<io::Image<math::Color3>> image);
                 math::Color3 getColor(const geometry::Hit& hit) const override;
                 
             private:
-                io::Image<math::Color3> image{};
+                std::shared_ptr<io::Image<math::Color3>> image{};
         };
     }
 }

@@ -35,7 +35,7 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit& hit,float tmin,
         auto n = (hit.p - _center) / _radius;
         hit.setNormal(ray,n);
         hit.material = material;
-        auto uv = pointToUV(hit.p);
+        auto uv = pointToUV(n);
         hit.u = uv.x();
         hit.v = uv.y();
         return true;
@@ -48,7 +48,7 @@ bool radiance::geometry::Sphere::trace(const math::Ray& ray,Hit& hit,float tmin,
         auto n = (hit.p - _center) / _radius;
         hit.setNormal(ray,n);
         hit.material = material;
-        auto uv = pointToUV(hit.p);
+        auto uv = pointToUV(n);
         hit.u = uv.x();
         hit.v = uv.y();
         return true;

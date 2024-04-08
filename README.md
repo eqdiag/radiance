@@ -40,19 +40,27 @@ All dependencies are self-contained in this project using git's submodule system
     - [x] have an image
     - [x] read from png
     - [x] read from exr
-- [ ] write to png
-
+- [x] write to png
 
 - [ ] triangles
 - [ ] load obj
 - [ ] instancing (make an instance hittable)
+
+- [ ] fix texture coords
 - [ ] plastic material (outside glass, inside diffuse)
 - [ ] glossy material
 
+- [ ] area lights
+
 
 ### P3
-- [ ] replace floats with Real
 
+
+### Bonus
+- [ ] stratification
+- [ ] sample lights based on surface area frac
+- [ ] efficient sphere sampling (via "cone sampling")
+- [ ] better triangle sampling
 
 
 ## Installation

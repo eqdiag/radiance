@@ -12,7 +12,54 @@
 
 bool radiance::io::readRGBImageFromPNG(Image<math::Color3> &image, const char *filename)
 {
-    return false;
+    int w,h,num_channels;
+    unsigned char* data = stbi_load(filename,&w,&h,&num_channels,3);
+
+    if(!data || (num_channels != 3)){
+        std::cerr << "ERROR: Failed to load alleged jpg image " << filename << std::endl;
+        return false;
+    }
+
+    image.resize(w,h);
+
+    for(int i = 0;i<w*h;i++){
+        image.write(i,math::Color3{
+            static_cast<float>(data[3*i]) / 255.99f,
+            static_cast<float>(data[3*i+1]) / 255.99f,
+            static_cast<float>(data[3*i+2]) / 255.99f
+        });
+
+    }
+
+    stbi_image_free(data);
+
+    return true;
+}
+
+bool radiance::io::readRGBImageFromJPG(Image<math::Color3> &image, const char *filename)
+{
+    int w,h,num_channels;
+    unsigned char* data = stbi_load(filename,&w,&h,&num_channels,3);
+
+    if(!data || (num_channels != 3)){
+        std::cerr << "ERROR: Failed to load alleged png image " << filename << std::endl;
+        return false;
+    }
+
+    image.resize(w,h);
+
+    for(int i = 0;i<w*h;i++){
+        image.write(i,math::Color3{
+            static_cast<float>(data[3*i]) / 255.99f,
+            static_cast<float>(data[3*i+1]) / 255.99f,
+            static_cast<float>(data[3*i+2]) / 255.99f
+        });
+    }
+
+
+    stbi_image_free(data);
+
+    return true;
 }
 
 bool radiance::io::readRGBImageFromEXR(Image<math::Color3> &image, const char *filename)
