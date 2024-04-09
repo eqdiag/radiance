@@ -14,6 +14,8 @@ namespace radiance{
 
     namespace geometry{struct AABB;}
 
+    namespace geometry{struct Vertex;}
+
 
     namespace geometry{
 
@@ -26,7 +28,7 @@ namespace radiance{
             bool outside;
 
             //Texture coordinates
-            float u,v;
+            math::Vec2 uv;
 
             std::shared_ptr<materials::Material> material;
 
@@ -48,6 +50,7 @@ namespace radiance{
             public:
                 HitList();
                 HitList(HitList&& rhs);
+                HitList(const std::vector<geometry::Vertex>& vertices,const std::vector<uint32_t>& indices,std::shared_ptr<materials::Material> material,math::Vec3 offset = math::Vec3::ZERO());
 
                 void addObject(std::shared_ptr<Hittable> object);
 

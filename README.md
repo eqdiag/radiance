@@ -42,14 +42,12 @@ All dependencies are self-contained in this project using git's submodule system
     - [x] read from exr
 - [x] write to png
 
-- [ ] triangles
-- [ ] load obj
+- [x] fix texture coords
+- [x] triangles
+- [x] load obj
 - [ ] instancing (make an instance hittable)
-
-- [ ] fix texture coords
 - [ ] plastic material (outside glass, inside diffuse)
 - [ ] glossy material
-
 - [ ] area lights
 
 
@@ -57,6 +55,8 @@ All dependencies are self-contained in this project using git's submodule system
 
 
 ### Bonus
+- [ ] Non-uniform diffuse
+- [ ] Types of texture samplers
 - [ ] stratification
 - [ ] sample lights based on surface area frac
 - [ ] efficient sphere sampling (via "cone sampling")

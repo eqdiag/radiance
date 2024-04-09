@@ -22,9 +22,9 @@ namespace radiance{
             float _radius;
             std::shared_ptr<materials::Material> material{};
             geometry::AABB box{};
-            //TODO: Make private
-            math::Vec2 pointToUV(const math::Vec3& p) const;
+            
             private:
+                math::Vec2 pointToUV(const math::Vec3& p) const;
 
         };
     }

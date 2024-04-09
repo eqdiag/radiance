@@ -19,13 +19,13 @@ radiance::materials::ImageTexture::ImageTexture(std::shared_ptr<io::Image<math::
 
 radiance::math::Color3 radiance::materials::ImageTexture::getColor(const geometry::Hit &hit) const
 {
-    float u = hit.u;
-    float v = hit.v;
+    float u = hit.uv.x();
+    float v = hit.uv.y();
 
     int x = static_cast<int>(u*image->width);
     int y = static_cast<int>(v*image->height);
 
-    auto col = image->read(x,y);
+    auto col = image->read(y,x);
 
     return col;
 }

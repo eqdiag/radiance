@@ -11,6 +11,8 @@ namespace radiance{
         //Supported image types (for reads writes)
         enum class ImageType{ PNG, JPG, EXR, UNSUPPORTED};
 
+        ImageType extensionToImageType(const char* ext,size_t len);
+
         template <typename T>
         class Image{
             public:
@@ -55,7 +57,10 @@ namespace radiance{
                 std::vector<T> data{};
         };
 
+
         /* Reads */
+
+        bool readRGBImageFromFile(Image<math::Color3>& image,const char* filename);
 
         bool readRGBImageFromPNG(Image<math::Color3>& image,const char* filename);
 

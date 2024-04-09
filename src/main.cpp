@@ -2,6 +2,7 @@
 
 
 #include "io/image.h"
+#include "io/mesh.h"
 #include "io/log.h"
 #include "math/vec.h"
 #include "math/ray.h"
@@ -17,6 +18,7 @@
 
 #include "geometry/hit.h"
 #include "geometry/sphere.h"
+#include "geometry/triangle.h"
 #include "geometry/scene.h"
 
 #include "settings.h"
@@ -147,7 +149,6 @@ radiance::geometry::Scene scene4(){
         std::cerr << "Failed to load: " << texture_path << std::endl;
     }
 
-
     auto texture = std::make_shared<radiance::materials::ImageTexture>(image);
     
 
@@ -171,6 +172,53 @@ radiance::geometry::Scene scene4(){
     return scene;
 }
 
+radiance::geometry::Scene scene5(){
+    //Materials
+    auto left = std::make_shared<radiance::materials::Glass>(1.5);
+
+    std::string texture_path = TEXTURE_DIR + std::string{"grid.exr"};
+    auto image = std::make_shared<radiance::io::Image<radiance::math::Color3>>();
+    std::cout << texture_path << std::endl;
+    if(!radiance::io::readRGBImageFromEXR(*image,texture_path.c_str())){
+        std::cerr << "Failed to load: " << texture_path << std::endl;
+    }
+
+    auto texture = std::make_shared<radiance::materials::ImageTexture>(image);
+    
+    auto center = std::make_shared<radiance::materials::Diffuse>(texture);
+    //auto center = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.8,0.2,0.2});
+    auto right = std::make_shared<radiance::materials::Mirror>(radiance::math::Color3{0.8,0.6,0.2});
+    auto floor = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.1,0.2,0.5});
+
+    //Geometry
+    
+
+    std::vector<radiance::geometry::Vertex> vertices{};
+    std::vector<uint32_t> indices{};
+
+    std::string filename = MODEL_DIR + std::string{"bunny.obj"};
+
+    if(!radiance::io::readTriangleListFromObj(vertices,indices,filename.c_str())){
+        std::cerr << "Failed to load obj: " << filename << std::endl;
+    }else{
+        std::cout << "Loaded obj file: " << filename << std::endl;
+    }
+
+    std::cout << "NUM FACES: " << indices.size() / 3 << std::endl;
+    radiance::geometry::HitList objects{vertices,indices,center,radiance::math::Vec3{0.2,-0.5,-2}};
+
+
+    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3(-1.0,0,-1), 0.5,left));
+    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3(1.0,0,-1), 0.5,right));
+    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3(0,-100.5,-1), 100,floor));
+
+  
+    //Construct scene
+    radiance::geometry::Scene scene{std::move(objects),true};
+
+    return scene;
+}
+
 radiance::geometry::Scene loadScene(int sceneNum){
     if(sceneNum == 0){
         return scene0();
@@ -182,6 +230,8 @@ radiance::geometry::Scene loadScene(int sceneNum){
         return scene3();
     }else if(sceneNum == 4){
         return scene4();
+    }else if(sceneNum == 5){
+        return scene5();
     }
     return scene0();
 }
@@ -196,17 +246,13 @@ int main(int argc,char** argv){
 
     radiance::math::initRandom();
 
-    radiance::geometry::Sphere s{radiance::math::Vec3{0,0,0},1.0,nullptr};
-
-    std::cout << s.pointToUV(radiance::math::Vec3{0,-1,1}.normalize()) << std::endl;
-
 
 
     //Image
     float aspect = 16.0/9.0;
     int width = 400;
     int height = static_cast<int>(width / aspect);
-    int spp = 100;
+    int spp = 10;
     int max_rays = 100;
     float bounce_offset = 0.0001;
     radiance::io::Image<radiance::math::Color3> out_image{width,height};
@@ -222,7 +268,7 @@ int main(int argc,char** argv){
         aspect,
         100.0,
         width,
-        radiance::math::Vec3{0,.5,1},
+        radiance::math::Vec3{0,.5,.5},
         radiance::math::Vec3{0,0,-1}
     );
 

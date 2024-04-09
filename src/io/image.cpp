@@ -10,13 +10,35 @@
 #define TINYEXR_IMPLEMENTATION
 #include "tiny_exr/tinyexr.h"
 
+radiance::io::ImageType radiance::io::extensionToImageType(const char *ext, size_t len)
+{
+
+    char lower_case[len];
+    
+    for(size_t i = 0;i < len;i++){
+        lower_case[i] = tolower(ext[i]);
+    }
+
+    if(!strcmp(lower_case,".png")){
+        return ImageType::PNG;
+    }else if(!strcmp(lower_case,".jpg")){
+        return ImageType::JPG;
+    }else if(!strcmp(lower_case,".exr")){
+        return ImageType::EXR;
+    }else{
+        return ImageType::UNSUPPORTED;
+    }
+
+}
+
+
 bool radiance::io::readRGBImageFromPNG(Image<math::Color3> &image, const char *filename)
 {
     int w,h,num_channels;
     unsigned char* data = stbi_load(filename,&w,&h,&num_channels,3);
 
-    if(!data || (num_channels != 3)){
-        std::cerr << "ERROR: Failed to load alleged jpg image " << filename << std::endl;
+    if(!data){
+        std::cerr << "ERROR: Failed to load alleged png image " << filename << std::endl;
         return false;
     }
 
@@ -41,8 +63,8 @@ bool radiance::io::readRGBImageFromJPG(Image<math::Color3> &image, const char *f
     int w,h,num_channels;
     unsigned char* data = stbi_load(filename,&w,&h,&num_channels,3);
 
-    if(!data || (num_channels != 3)){
-        std::cerr << "ERROR: Failed to load alleged png image " << filename << std::endl;
+    if(!data){
+        std::cerr << "ERROR: Failed to load alleged jpg image " << filename << std::endl;
         return false;
     }
 

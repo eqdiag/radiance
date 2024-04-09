@@ -9,6 +9,7 @@ radiance::geometry::Scene::Scene(HitList&& hitList,bool buildBVH)
     }else{
         sceneRoot = std::make_shared<geometry::HitList>(std::move(hitList));
     }
+
 }
 
 radiance::math::Color3 radiance::geometry::Scene::radiance(const math::Ray &ray, int depth, float bounceOffset)
