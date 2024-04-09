@@ -45,11 +45,13 @@ bool radiance::io::readRGBImageFromPNG(Image<math::Color3> &image, const char *f
     image.resize(w,h);
 
     for(int i = 0;i<w*h;i++){
-        image.write(i,math::Color3{
+        auto color = math::Color3{
             static_cast<float>(data[3*i]) / 255.99f,
             static_cast<float>(data[3*i+1]) / 255.99f,
             static_cast<float>(data[3*i+2]) / 255.99f
-        });
+        };
+        color = math::gammaToLinear(color,2.0);
+        image.write(i,color);
 
     }
 
@@ -71,11 +73,13 @@ bool radiance::io::readRGBImageFromJPG(Image<math::Color3> &image, const char *f
     image.resize(w,h);
 
     for(int i = 0;i<w*h;i++){
-        image.write(i,math::Color3{
+        auto color = math::Color3{
             static_cast<float>(data[3*i]) / 255.99f,
             static_cast<float>(data[3*i+1]) / 255.99f,
             static_cast<float>(data[3*i+2]) / 255.99f
-        });
+        };
+        color = math::gammaToLinear(color,2.0);
+        image.write(i,color);
     }
 
 

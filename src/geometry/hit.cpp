@@ -9,7 +9,13 @@ void radiance::geometry::Hit::setNormal(const radiance::math::Ray &ray, const ra
     n = outside ? normal : -normal;
 }
 
-radiance::geometry::HitList::HitList(){
+std::shared_ptr<radiance::materials::Material> radiance::geometry::Hittable::getMaterial() const{
+    return nullptr;
+}
+
+
+radiance::geometry::HitList::HitList()
+{
 
 }
 
@@ -30,6 +36,8 @@ bool radiance::geometry::HitList::boundingBox(geometry::AABB &box) const
     return true;
 }
 
+
+
 radiance::geometry::HitList::HitList(const std::vector<geometry::Vertex> &vertices, const std::vector<uint32_t> &indices,std::shared_ptr<materials::Material> material,math::Vec3 offset)
 {
     uint32_t num_faces = indices.size()/3;
@@ -45,6 +53,34 @@ radiance::geometry::HitList::HitList(const std::vector<geometry::Vertex> &vertic
         );
     }
 }
+
+radiance::geometry::HitList::HitList(const std::vector<geometry::Vertex>& vertices,const std::vector<uint32_t>& indices,std::shared_ptr<materials::Material> material,math::Transform transform)
+{
+    auto matrix = transform.matrix;
+    auto inverse_transpose = transform.inverse.transpose();
+
+    uint32_t num_faces = indices.size()/3;
+    for(uint32_t f = 0;f < num_faces;f++){
+        auto v0 = vertices[indices[3*f]];
+        v0.p = (matrix * math::Vec4{v0.p.x(),v0.p.y(),v0.p.z(),1.0}).xyz();
+        v0.n = (inverse_transpose * math::Vec4{v0.n.x(),v0.n.y(),v0.n.z(),0.0}).xyz().normalize();
+
+        auto v1 = vertices[indices[3*f + 1]];
+        v1.p = (matrix * math::Vec4{v1.p.x(),v1.p.y(),v1.p.z(),1.0}).xyz();
+        v1.n = (inverse_transpose * math::Vec4{v1.n.x(),v1.n.y(),v1.n.z(),0.0}).xyz().normalize();
+
+        auto v2 = vertices[indices[3*f + 2]];        
+        v2.p = (matrix * math::Vec4{v2.p.x(),v2.p.y(),v2.p.z(),1.0}).xyz();
+        v2.n = (inverse_transpose * math::Vec4{v2.n.x(),v2.n.y(),v2.n.z(),0.0}).xyz().normalize();
+
+        auto triangle = std::make_shared<geometry::Triangle>(v0,v1,v2,material);
+
+        objects.push_back(
+            triangle
+        );
+    }
+}
+
 
 bool radiance::geometry::HitList::trace(const math::Ray& ray,Hit& hit,float tmin,float tmax) const{
 
@@ -70,3 +106,5 @@ bool radiance::geometry::HitList::trace(const math::Ray& ray,Hit& hit,float tmin
 
     return false;
 }
+
+

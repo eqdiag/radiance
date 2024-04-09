@@ -59,6 +59,11 @@ bool radiance::geometry::Sphere::boundingBox(geometry::AABB &outBox) const
     return true;
 }
 
+std::shared_ptr<radiance::materials::Material> radiance::geometry::Sphere::getMaterial() const
+{
+    return material;
+}
+
 radiance::math::Vec2 radiance::geometry::Sphere::pointToUV(const math::Vec3 &p) const
 {
     float phi = acos(-p.y());

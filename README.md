@@ -45,11 +45,13 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] fix texture coords
 - [x] triangles
 - [x] load obj
-- [ ] instancing (make an instance hittable)
-- [ ] plastic material (outside glass, inside diffuse)
-- [ ] glossy material
+
+- [x] glossy material
+- [x] plastic material (outside glass, inside diffuse)
+- [ ] rectangle? (just two tris)
 - [ ] area lights
 
+- [ ] remove ply dependency
 
 ### P3
 
@@ -61,6 +63,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] sample lights based on surface area frac
 - [ ] efficient sphere sampling (via "cone sampling")
 - [ ] better triangle sampling
+- [ ] different bvh splitting methods
 
 
 ## Installation

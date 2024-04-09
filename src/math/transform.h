@@ -12,9 +12,9 @@ namespace radiance{
             public:
 
         
-                Transform& scale(Vec3& s);
+                Transform& scale(Vec3 s);
                 Transform& translate(Vec3 t);
-                Transform& rotate(float angle,Vec3& axis);
+                Transform& rotate(float angle,Vec3 axis);
 
                 Mat4 matrix{};
                 Mat4 inverse{};

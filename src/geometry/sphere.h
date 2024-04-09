@@ -17,12 +17,14 @@ namespace radiance{
 
             bool boundingBox(geometry::AABB& outBox) const override;
 
+            std::shared_ptr<materials::Material> getMaterial() const override;
+
 
             math::Vec3 _center;
             float _radius;
-            std::shared_ptr<materials::Material> material{};
             geometry::AABB box{};
-            
+            std::shared_ptr<materials::Material> material{};
+
             private:
                 math::Vec2 pointToUV(const math::Vec3& p) const;
 

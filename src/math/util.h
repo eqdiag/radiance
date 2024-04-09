@@ -62,6 +62,10 @@ namespace radiance{
 
         Color3 linearToGamma(Color3 value,float gamma);
 
+        float gammaToLinear(float value,float gamma);
+
+        Color3 gammaToLinear(Color3 value,float gamma);
+
 
         /* Timing */
 

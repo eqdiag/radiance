@@ -25,8 +25,11 @@ namespace radiance{
                 //Get bounding box if the object has one
                 bool boundingBox(geometry::AABB& outBox) const override;
 
-                std::shared_ptr<materials::Material> material{};
+                std::shared_ptr<materials::Material> getMaterial() const override;
+
+
                 geometry::AABB box{};
+                std::shared_ptr<materials::Material> material{};
 
             private:
                 Vertex v0{};

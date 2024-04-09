@@ -85,12 +85,22 @@ radiance::math::Vec3 radiance::math::randomOnUnitHemisphere(const math::Vec3 &n)
 
 float radiance::math::linearToGamma(float value, float gamma)
 {
-    return sqrt(value);
+    return pow(value,1.0/gamma);
 }
 
 radiance::math::Color3 radiance::math::linearToGamma(Color3 value, float gamma)
 {
     return math::Color3{linearToGamma(value.x(),gamma),linearToGamma(value.y(),gamma),linearToGamma(value.z(),gamma)};
+}
+
+float radiance::math::gammaToLinear(float value, float gamma)
+{
+    return pow(value,gamma);
+}
+
+radiance::math::Color3 radiance::math::gammaToLinear(Color3 value, float gamma)
+{
+    return math::Color3{gammaToLinear(value.x(),gamma),gammaToLinear(value.y(),gamma),gammaToLinear(value.z(),gamma)};
 }
 
 void radiance::math::Timer::setName(const char *name)

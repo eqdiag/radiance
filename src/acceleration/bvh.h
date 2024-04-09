@@ -21,6 +21,7 @@ namespace radiance{
 
                 bool trace(const math::Ray& ray,geometry::Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
                 bool boundingBox(geometry::AABB& outBox) const override;
+
                 
             private:
 

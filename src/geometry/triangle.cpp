@@ -21,7 +21,7 @@ bool radiance::geometry::Triangle::trace(const math::Ray &ray, Hit &hit, float t
 {
     //First check for plane intersection
     float denom = ray.v.dot(faceNormal);
-    if(std::abs(denom) < 0.0001) return false;
+    if(std::abs(denom) < 0.00001) return false;
 
     float t = -(ray.p - v0.p).dot(faceNormal) / denom;
     if((t <= tmin)  || (t >= tmax)) return false;
@@ -50,11 +50,11 @@ bool radiance::geometry::Triangle::trace(const math::Ray &ray, Hit &hit, float t
 
 
     //Compute barycentric coords
-    float a2 = (0.5*v01.cross(q0).norm()) / area;
+    /*float a2 = (0.5*v01.cross(q0).norm()) / area;
     float a0 = (0.5*v12.cross(q1).norm()) / area;
     float a1 = (0.5*v20.cross(q2).norm()) / area;
 
-    hit.uv = v0.uv*a0 + v1.uv*a1 + v2.uv*a2;
+    hit.uv = v0.uv*a0 + v1.uv*a1 + v2.uv*a2;*/
 
     /*auto normal = _normal;
     if(_vertexNormals){
@@ -76,4 +76,9 @@ bool radiance::geometry::Triangle::boundingBox(geometry::AABB &outBox) const
 {
     outBox = box;
     return true;
+}
+
+std::shared_ptr<radiance::materials::Material> radiance::geometry::Triangle::getMaterial() const
+{
+    return material;
 }

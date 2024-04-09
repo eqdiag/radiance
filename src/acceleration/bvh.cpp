@@ -9,7 +9,8 @@ radiance::acceleration::BVHNode::BVHNode(geometry::HitList &&hitList):
 {
 }
 
-radiance::acceleration::BVHNode::BVHNode(std::vector<std::shared_ptr<radiance::geometry::Hittable>> &objects) : BVHNode(objects, 0, objects.size())
+radiance::acceleration::BVHNode::BVHNode(std::vector<std::shared_ptr<radiance::geometry::Hittable>> &objects): 
+    BVHNode(objects, 0, objects.size())
 {
     
 }
@@ -84,6 +85,7 @@ bool radiance::acceleration::BVHNode::boundingBox(geometry::AABB &outBox) const
     outBox = box;
     return true;
 }
+
 
 bool radiance::acceleration::compareBoxMins(int axis, std::shared_ptr<geometry::Hittable> lhs, std::shared_ptr<geometry::Hittable> rhs)
 {
