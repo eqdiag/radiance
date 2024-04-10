@@ -539,7 +539,7 @@ radiance::geometry::Scene scene10(){
 
 
     transform = radiance::math::Transform{}
-        .scale(radiance::math::Vec3{2,1,4}*15)
+        .scale(radiance::math::Vec3{2,1,4}*100)
         .rotate(radiance::math::degToRad(89.99),radiance::math::Vec3{1,0,0})
         .translate(radiance::math::Vec3{0,-1.5,-5});
 
@@ -604,7 +604,7 @@ int main(int argc,char** argv){
     float aspect = 16.0/9.0;
     int width = 400;
     int height = static_cast<int>(width / aspect);
-    int spp = 100;
+    int spp = 32;
     int max_rays = 3000;
     float bounce_offset = 0.0001;
     radiance::io::Image<radiance::math::Color3> out_image{width,height};
