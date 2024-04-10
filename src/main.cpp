@@ -484,7 +484,7 @@ radiance::geometry::Scene scene10(){
     //Materials
     auto left = std::make_shared<radiance::materials::Glass>(1.5);
 
-    std::string texture_path = TEXTURE_DIR + std::string{"wood.png"};
+    std::string texture_path = TEXTURE_DIR + std::string{"earth.png"};
     auto image = std::make_shared<radiance::io::Image<radiance::math::Color3>>();
     std::cout << texture_path << std::endl;
     if(!radiance::io::readRGBImageFromPNG(*image,texture_path.c_str())){
@@ -493,10 +493,12 @@ radiance::geometry::Scene scene10(){
 
     auto texture = std::make_shared<radiance::materials::ImageTexture>(image);
     
-    auto plastic_floor = std::make_shared<radiance::materials::Plastic>(texture);
+    auto plastic = std::make_shared<radiance::materials::Plastic>(texture);
 
     auto mirror = std::make_shared<radiance::materials::Mirror>(radiance::math::Color3{1,1,1});
     auto green = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.2,0.8,0.2});
+    auto red = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.8,0.2,0.2});
+
 
     auto glass = std::make_shared<radiance::materials::Glass>(1.5);
 
@@ -541,16 +543,16 @@ radiance::geometry::Scene scene10(){
         .rotate(radiance::math::degToRad(89.99),radiance::math::Vec3{1,0,0})
         .translate(radiance::math::Vec3{0,-1.5,-5});
 
-    radiance::geometry::HitList floor_mesh{vertices,indices,plastic_floor,transform};
+    radiance::geometry::HitList floor_mesh{vertices,indices,red,transform};
 
     radiance::geometry::HitList objects{};
     
     objects.mergeList(floor_mesh);
     //objects.mergeList(bunny_mesh);
 
-    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3{2,-0.5,-4},1.0,mirror));
-    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3{0,-0.5,-4},1.0,green));
-    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3{-2,-0.5,-4},1.0,glass));
+    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3{3,-0.5,-4},1.0,glass));
+    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3{0,0,-4},1.5,plastic));
+    objects.addObject(std::make_shared<radiance::geometry::Sphere>(radiance::math::Vec3{-3,-0.5,-4},1.0,green));
 
 
     //Construct scene
