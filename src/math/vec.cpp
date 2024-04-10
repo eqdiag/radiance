@@ -324,6 +324,11 @@ radiance::math::Vec3 radiance::math::Vec3::max(const Vec3 &rhs) const
     return Vec3(fmax(mX,rhs.x()),fmax(mY,rhs.y()),fmax(mZ,rhs.z()));
 }
 
+radiance::math::Vec3 radiance::math::Vec3::clamp(float min, float max) const
+{
+    return math::Vec3{std::clamp(mX,min,max),std::clamp(mY,min,max),std::clamp(mZ,min,max)};
+}
+
 radiance::math::Vec3 radiance::math::Vec3::ZERO()
 {
     return Vec3{0,0,0};

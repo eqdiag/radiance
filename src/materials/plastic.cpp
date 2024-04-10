@@ -15,18 +15,21 @@ bool radiance::materials::Plastic::bounce(const math::Ray &in, const geometry::H
 {
 
     float cos = - in.v.dot(hit.n);
-    float f = math::schlick(cos,1.0/1.5);
+    float f = math::schlick(cos,1.0/1.7);
 
-    attenutation = texture->getColor(hit);
+    
 
     //Normal reflection
-    if(math::randomFloat() < f){
+    float r = math::randomFloat();
+    if(r < f){
+        attenutation = math::Vec3{1,1,1};
         auto v_out = math::reflect(in.v,hit.n);
         out = math::Ray{hit.p,v_out};
+        return true;
     }else{ //Refract into diffuse material
-        auto v = math::randomOnUnitHemisphere(hit.n);
-        out = math::Ray{hit.p,v};
+        auto v_out = math::randomOnUnitHemisphere(hit.n);
+        out = math::Ray{hit.p,v_out};
+        attenutation = texture->getColor(hit);
+        return true;
     }
-
-    return true;
 }

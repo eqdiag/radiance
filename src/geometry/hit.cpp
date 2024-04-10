@@ -54,6 +54,13 @@ radiance::geometry::HitList::HitList(const std::vector<geometry::Vertex> &vertic
     }
 }
 
+void radiance::geometry::HitList::mergeList(const HitList& list)
+{  
+    for(const auto& obj: list.objects){
+        objects.push_back(obj);
+    }
+}
+
 radiance::geometry::HitList::HitList(const std::vector<geometry::Vertex>& vertices,const std::vector<uint32_t>& indices,std::shared_ptr<materials::Material> material,math::Transform transform)
 {
     auto matrix = transform.matrix;

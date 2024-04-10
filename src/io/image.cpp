@@ -151,7 +151,9 @@ bool radiance::io::writeRGBImageToPNG(const Image<math::Color3> &image, const ch
 
     char* data = new char[width*height*3];
     for(int i = 0;i< width*height;i++){
-        auto col = radiance::math::linearToGamma(image.read(i),2.0) * 255.99;
+        auto col = radiance::math::linearToGamma(image.read(i),2.0);
+        col = col.clamp(0.0,1.0);
+        col *= 255.9;
         data[3*i] = col.r();
         data[3*i+1] = col.g();
         data[3*i+2] = col.b();

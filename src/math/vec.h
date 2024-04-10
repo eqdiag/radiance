@@ -114,6 +114,9 @@ namespace radiance{
 			/*Componentwise min-max*/
 			Vec3 min(const Vec3& rhs) const;
 			Vec3 max(const Vec3& rhs) const;
+
+			/* Clamping*/
+			Vec3 clamp(float min,float max) const;
  
 
 			friend std::istream& operator>>(std::istream& in, Vec3& v);

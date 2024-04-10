@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "math/vec.h"
-
+#include "ray.h"
 
 namespace radiance{
 
@@ -44,6 +44,8 @@ namespace radiance{
 			Mat4 operator*(const float rhs) const;
 			Mat4 transpose() const;
 
+			//Ray interaction
+			Ray transform(math::Ray& ray);
 
 			//Get raw data (column-major order)
 			float* getRawData();
@@ -71,6 +73,7 @@ namespace radiance{
 			static Mat4 orthographicProjection(float left, float right, float bottom, float top, float near, float far);
 			static Mat4 perspectiveProjection(float fovy, float aspectRatio, float near, float far);
 
+			
 
 		private:
 			union {

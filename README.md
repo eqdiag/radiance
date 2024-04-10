@@ -48,12 +48,13 @@ All dependencies are self-contained in this project using git's submodule system
 
 - [x] glossy material
 - [x] plastic material (outside glass, inside diffuse)
-- [ ] rectangle? (just two tris)
-- [ ] area lights
+- [x] area lights (make emitting material)
 
-- [ ] remove ply dependency
 
 ### P3
+- [ ] stratified sampling
+- [ ] read 1-5
+- [ ]
 
 
 ### Bonus
@@ -64,6 +65,9 @@ All dependencies are self-contained in this project using git's submodule system
 - [ ] efficient sphere sampling (via "cone sampling")
 - [ ] better triangle sampling
 - [ ] different bvh splitting methods
+- [ ] instancing (test with spheres, meshes)
+    - [ ] hit list -> bvh node
+- [ ] remove ply dependency
 
 
 ## Installation

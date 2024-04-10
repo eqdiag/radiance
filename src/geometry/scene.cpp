@@ -2,7 +2,8 @@
 #include "materials/material.h"
 #include "acceleration/bvh.h"
 
-radiance::geometry::Scene::Scene(HitList&& hitList,bool buildBVH)
+radiance::geometry::Scene::Scene(HitList&& hitList,bool buildBVH,std::optional<math::Color3> backgroundColor):
+    backgroundColor{backgroundColor}
 {   
     if(buildBVH){
         sceneRoot = std::make_shared<acceleration::BVHNode>(hitList.objects);
@@ -26,18 +27,25 @@ radiance::math::Color3 radiance::geometry::Scene::radiance(const math::Ray &ray,
         math::Color3 color = math::BLACK;
 
         //TODO: Add emittance
+        color += hit.material->emit(hit);
+
+
 
 
         //Multi-bounce loop
         math::Color3 reflectance{};
         math::Ray out{};
         if(hit.material->bounce(ray,hit,reflectance,out)){
-            return reflectance * radiance(out,depth-1,bounceOffset);
+            color += reflectance * radiance(out,depth-1,bounceOffset);
         }
-
+        return color;
     }
 
-    return background(ray);
+    if(backgroundColor.has_value()){
+        return backgroundColor.value();
+    }else{
+        return background(ray);
+    }
 }
 
 void radiance::geometry::Scene::render(io::Image<math::Color3> &image,const cameras::Perspective& camera, int samplesPerPixel, int maxBounces, float bounceOffset)

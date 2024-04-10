@@ -60,6 +60,8 @@ namespace radiance{
 
                 void addObject(std::shared_ptr<Hittable> object);
 
+                void mergeList(const HitList& list);
+
                 bool trace(const math::Ray& ray,Hit& hit,float tmin = 0.0f,float tmax = std::numeric_limits<float>::infinity()) const override;
                 bool boundingBox(geometry::AABB& box) const override;
 

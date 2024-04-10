@@ -21,6 +21,12 @@ radiance::math::Transform &radiance::math::Transform::rotate(float angle, Vec3 a
     return *this;
 }
 
+void radiance::math::Transform::clear()
+{
+    matrix = math::Mat4::identity();
+    inverse = math::Mat4::identity();
+}
+
 std::ostream &radiance::math::operator<<(std::ostream &out, const Transform &v)
 {
     out << v.matrix;

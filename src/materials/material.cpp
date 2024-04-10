@@ -10,3 +10,8 @@ radiance::materials::Material::Material(std::shared_ptr<Texture> texture):
 {
 
 }
+
+radiance::math::Color3 radiance::materials::Material::emit(const geometry::Hit &hit) const
+{
+    return math::BLACK;
+}

@@ -16,7 +16,7 @@ namespace radiance{
         class Scene{    
             public:
 
-                Scene(HitList&& hitList,bool buildBHV = false);
+                Scene(HitList&& hitList,bool buildBHV = false,std::optional<math::Color3> backgroundColor = std::nullopt);
 
                 math::Color3 radiance(const math::Ray& ray,int depth,float bounceOffset);
 
@@ -24,6 +24,8 @@ namespace radiance{
 
 
             private:
+
+                std::optional<math::Color3> backgroundColor{};
 
                 radiance::math::Color3 background(const radiance::math::Ray& ray) const;
 

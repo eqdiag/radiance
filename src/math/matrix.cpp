@@ -99,6 +99,13 @@ radiance::math::Mat4 radiance::math::Mat4::transpose() const
 	return m;
 }
 
+radiance::math::Ray radiance::math::Mat4::transform(math::Ray &ray)
+{
+	auto new_p = ((*this) * math::Vec4{ray.p.x(),ray.p.y(),ray.p.z(),1.0}).xyz();
+	auto new_v = ((*this) * math::Vec4{ray.v.x(),ray.v.y(),ray.v.z(),0.0}).xyz();
+
+	return radiance::math::Ray{new_p,new_v};
+}
 
 float* radiance::math::Mat4::getRawData()
 {
