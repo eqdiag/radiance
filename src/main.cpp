@@ -33,8 +33,8 @@
 
 radiance::geometry::Scene scene0(){
     //Materials
-    auto center = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.7,0.3,0.3});
-    auto floor = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.8,0.8,0.0});
+    auto center = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.5,0.5,0.5});
+    auto floor = std::make_shared<radiance::materials::Diffuse>(radiance::math::Color3{0.5,0.5,0.5});
 
     //Geometry
     
@@ -604,9 +604,9 @@ int main(int argc,char** argv){
     float aspect = 16.0/9.0;
     int width = 400;
     int height = static_cast<int>(width / aspect);
-    int spp = 32;
-    int max_rays = 3000;
-    float bounce_offset = 0.0001;
+    int spp = 64;
+    int max_rays = 100;
+    float bounce_offset = 0.001;
     radiance::io::Image<radiance::math::Color3> out_image{width,height};
 
     //Camera
@@ -614,15 +614,15 @@ int main(int argc,char** argv){
     float view_height = 2.0; //Specify height because vfov
     float view_width = view_height * aspect;
 
-    //radiance::cameras::Perspective camera{view_width,view_height,width,height};
+    radiance::cameras::Perspective camera{view_width,view_height,width,height};
 
-    auto camera = radiance::cameras::Perspective::lookAt(
+    /*auto camera = radiance::cameras::Perspective::lookAt(
         aspect,
         100.0,
         width,
         radiance::math::Vec3{0,0,.5},
         radiance::math::Vec3{0,0,-1}
-    );
+    );*/
 
 
     std::cout << "Loading scene num: " << scene_num << std::endl;

@@ -54,7 +54,7 @@ radiance::cameras::Perspective radiance::cameras::Perspective::lookAt(
 radiance::math::Ray radiance::cameras::Perspective::generateRay(int i, int j) const
 {
     //Randomly sample in pixel
-    auto rdx = dx*radiance::math::randomFloat(-0.5,0.5) + dy*radiance::math::randomFloat(-0.5,0.5);
+    auto rdx = dx*radiance::math::randomFloat(0,0.5) + dy*radiance::math::randomFloat(0,0.5);
 
     auto film_pt = corner + dx*j + dy*i + rdx;
     return radiance::math::Ray{eye,(film_pt - eye)};
