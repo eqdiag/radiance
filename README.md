@@ -1,8 +1,6 @@
 # radiance
 
-
-
-
+A physically-based path tracer.
 
 All dependencies are self-contained in this project using git's submodule system.
 
@@ -15,6 +13,7 @@ All dependencies are self-contained in this project using git's submodule system
 - argh: Command line parsing
 
 
+<<<<<<< HEAD
 ## Features
 - [ ]
 
@@ -23,19 +22,44 @@ All dependencies are self-contained in this project using git's submodule system
 ### P3
 - [ ] stratified sampling
 - [ ] multithreaded
+=======
+
+# Features
+- [x] Triangle Mesh and Sphere Intersections
+- [x] Bounding Volume Hierachy (BVH) for Ray Acceleration
+- [x] Recursive Path Tracing solution to the [Rendering Equation](https://en.wikipedia.org/wiki/Rendering_equation).
+- [x] Support for multiple material BSDFs: Lambertian (diffuse), Perfect mirror, Dielectric (glass)
+- [x] Direct light sampling to speed up convergence
+- [x] Single-sample multiple-importance sampling between BSDF and direct light samples
+- [x] Support for custom environment maps as light sources
+
+# Screenshots
+
+## Comparison (BRDF sampling vs Direct Light sampling w/ 32 samples per pixel)
+### 32 samples per pixel (No direct lighting)
+![compare_no_direct_light](/screenshots/cbox_compare_no_direct.png "No Direct lighting cbox")
+### 32 samples per pixel (With direct lighting)
+![compare_direct_light](/screenshots/cbox_compare_direct.png "Direct lighting cbox")
 
 
-### Bonus
-- [ ] Non-uniform diffuse
-- [ ] Types of texture samplers
-- [ ] stratification
-- [ ] sample lights based on surface area frac
-- [ ] efficient sphere sampling (via "cone sampling")
-- [ ] better triangle sampling
-- [ ] different bvh splitting methods
-- [ ] instancing (test with spheres, meshes)
-    - [ ] hit list -> bvh node
-- [ ] remove ply dependency
+## Comparison (BRDF sampling vs Direct Light sampling w/ 32 samples per pixel for Environment Map)
+![env_no_direct_light](/screenshots/env_compare_no_direct.png "No Direct lighting with Environment Map")
+![env_direct_light](/screenshots/env_compare_direct.png "Direct lighting with Environment Map")
+>>>>>>> 84d1715c9004668832c485d8bc52fba8d0aed1b2
+
+# Showcase
+
+## Cornell Box (All Diffuse Materials,512 spp)
+![cbox_all_diffuse](/screenshots/cbox_diffuse.png "Cbox all diffuse")
+
+## Cornell Box (Perfect Reflective & Glass Materials,512 spp)
+![cbox_reflect_glass](/screenshots/cbox_reflect_glass.png "Cbox reflect and glass")
+
+## Cornell Box (Bunny Triangle Mesh, 512 spp)
+![cbox_reflect_glass](/screenshots/cbox_bunny.png "Cbox bunny")
+
+## Environment Map with Mesh (Dragon Triangle Mesh, 512 spp)
+![env_dragon](/screenshots/env_ennis_dragon.png "Environment dragon")
 
 
 ## Installation
@@ -51,8 +75,4 @@ cmake ..
 make
 ```
 
-## Usage
-The CLI version of *radiance* contains many options than be passed to control the rendering behavior.
-They are organized by parts of the scene that will be affected.
-
-## Screenshots
+## Usage (TODO)
