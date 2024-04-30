@@ -13,17 +13,6 @@ All dependencies are self-contained in this project using git's submodule system
 - argh: Command line parsing
 
 
-<<<<<<< HEAD
-## Features
-- [ ]
-
-
-
-### P3
-- [ ] stratified sampling
-- [ ] multithreaded
-=======
-
 # Features
 - [x] Triangle Mesh and Sphere Intersections
 - [x] Bounding Volume Hierachy (BVH) for Ray Acceleration
