@@ -15,15 +15,15 @@ radiance::cameras::Perspective::Perspective
     radiance::math::Vec3 front,
     float focalLength
 ):
-    eye{eye},
-    right{right.normalize()},
-    up{up.normalize()},
-    front{front.normalize()*focalLength},
-    view_u{right*view_width},
-    view_v{-up*view_height},
-    dx{view_u/width},
-    dy{view_v/height},
-    corner{eye + front - view_u*0.5 - view_v*0.5}    
+    _eye{eye},
+    _right{right.normalize()},
+    _up{up.normalize()},
+    _front{front.normalize()*focalLength},
+    _view_u{right*view_width},
+    _view_v{-up*view_height},
+    _du{_view_u/width},
+    _dv{_view_v/height},
+    _corner{eye + front - _view_u*0.5 - _view_v*0.5 + _du*0.5 + _dv*0.5}    
 {
     
 
@@ -54,8 +54,8 @@ radiance::cameras::Perspective radiance::cameras::Perspective::lookAt(
 radiance::math::Ray radiance::cameras::Perspective::generateRay(int i, int j) const
 {
     //Randomly sample in pixel
-    auto rdx = dx*radiance::math::randomFloat(0,0.5) + dy*radiance::math::randomFloat(0,0.5);
+    auto rdx = _du*(radiance::math::randomFloat() - 0.5)+ _dv*(radiance::math::randomFloat() - 0.5);
 
-    auto film_pt = corner + dx*j + dy*i + rdx;
-    return radiance::math::Ray{eye,(film_pt - eye)};
+    auto film_pt = _corner + _du*j + _dv*i + rdx;
+    return radiance::math::Ray{_eye,(film_pt - _eye)};
 }

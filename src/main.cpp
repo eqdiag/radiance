@@ -588,6 +588,8 @@ radiance::geometry::Scene loadScene(int sceneNum){
     return scene0();
 }
 
+
+
 int main(int argc,char** argv){
 
     auto cmdl = argh::parser(argc, argv);
@@ -595,6 +597,7 @@ int main(int argc,char** argv){
     int scene_num = 0;
     cmdl({"-s","--scene"},0) >> scene_num;
 
+    auto scene = loadScene(scene_num);
 
     radiance::math::initRandom();
 
@@ -604,36 +607,39 @@ int main(int argc,char** argv){
     float aspect = 16.0/9.0;
     int width = 400;
     int height = static_cast<int>(width / aspect);
-    int spp = 64;
-    int max_rays = 100;
+    int spp = 10;
+    int max_rays = 300;
     float bounce_offset = 0.001;
     radiance::io::Image<radiance::math::Color3> out_image{width,height};
 
     //Camera
     float focal_length = 1.0;
-    float view_height = 2.0; //Specify height because vfov
-    float view_width = view_height * aspect;
+    float view_height = 2.0; 
+    float view_width = view_height * (float(width)/height);
 
-    radiance::cameras::Perspective camera{view_width,view_height,width,height};
+    auto center = radiance::math::Vec3{0,0,0};
+    auto view_u = radiance::math::Vec3{view_width,0,0};
+    auto view_v = radiance::math::Vec3{0,-view_height,0};
+    auto du = view_u / width;
+    auto dv = view_v / height;
+    auto top_left = center - radiance::math::Vec3{0,0,focal_length} - view_u*0.5 - view_v*0.5;
+    auto p00 = top_left + du*0.5 + dv*0.5;
 
-    /*auto camera = radiance::cameras::Perspective::lookAt(
+
+    //radiance::cameras::Perspective camera{view_width,view_height,width,height};
+
+    auto camera = radiance::cameras::Perspective::lookAt(
         aspect,
-        100.0,
+        90.0,
         width,
-        radiance::math::Vec3{0,0,.5},
+        radiance::math::Vec3{0,0.0,1.5},
         radiance::math::Vec3{0,0,-1}
-    );*/
+    );
 
-
-    std::cout << "Loading scene num: " << scene_num << std::endl;
-
-    auto scene = loadScene(scene_num);
-    
-    radiance::math::Timer timer{"Render time"};
-    timer.begin();
     scene.render(out_image,camera,spp,max_rays,bounce_offset);
-    timer.stop();
-    timer.displaySeconds();
+
+    
+   
 
     std::string out_name = OUTPUT_DIR + std::string{"out_"} + std::to_string(scene_num) + std::string{".png"};
     if(!radiance::io::writeRGBImageToPNG(out_image,out_name.c_str())){

@@ -36,7 +36,7 @@ All dependencies are self-contained in this project using git's submodule system
 - [x] bvh
     - [x] from hitlist
     - [x] from list of hittables
-- [ ] textures 
+- [x] textures 
     - [x] have an image
     - [x] read from png
     - [x] read from exr

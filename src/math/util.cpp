@@ -43,7 +43,7 @@ void radiance::math::initRandom()
 //Return random float in [min,max)
 float radiance::math::randomFloat(float min, float max)
 {
-    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX + 1.0);
     return r*(max - min) + min;
 }
 

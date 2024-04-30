@@ -49,22 +49,22 @@ namespace radiance{
             private:
 
                 //Frame of camera
-                radiance::math::Vec3 eye;
-                radiance::math::Vec3 right;
-                radiance::math::Vec3 up;
-                radiance::math::Vec3 front;
+                radiance::math::Vec3 _eye;
+                radiance::math::Vec3 _right;
+                radiance::math::Vec3 _up;
+                radiance::math::Vec3 _front;
 
 
                 //Right and left directions from corner
-                radiance::math::Vec3 view_u;
-                radiance::math::Vec3 view_v;
+                radiance::math::Vec3 _view_u;
+                radiance::math::Vec3 _view_v;
 
                 //Offsets between pixel centers
-                radiance::math::Vec3 dx;
-                radiance::math::Vec3 dy;
+                radiance::math::Vec3 _du;
+                radiance::math::Vec3 _dv;
 
                 //Top-left corner of film (offset by half of dx,dy)
-                radiance::math::Vec3 corner;
+                radiance::math::Vec3 _corner;
 
         };
 

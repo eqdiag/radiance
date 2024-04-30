@@ -55,11 +55,11 @@ void radiance::geometry::Scene::render(io::Image<math::Color3> &image,const came
         for(int j= 0;j< image.width;j++){
 
     
-            auto ray = camera.generateRay(i,j);
 
             auto final_color = radiance::math::BLACK;
 
             for(int k = 0;k < samplesPerPixel;k++){
+                auto ray = camera.generateRay(i,j);
                 auto color = radiance(ray,maxBounces,bounceOffset);
                 final_color += color;
             }
