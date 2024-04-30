@@ -34,7 +34,6 @@ All dependencies are self-contained in this project using git's submodule system
 ## Comparison (BRDF sampling vs Direct Light sampling w/ 32 samples per pixel for Environment Map)
 ![env_no_direct_light](/screenshots/env_compare_no_direct.png "No Direct lighting with Environment Map")
 ![env_direct_light](/screenshots/env_compare_direct.png "Direct lighting with Environment Map")
->>>>>>> 84d1715c9004668832c485d8bc52fba8d0aed1b2
 
 # Showcase
 
