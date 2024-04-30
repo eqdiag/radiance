@@ -64,8 +64,4 @@ cmake ..
 make
 ```
 
-## Usage
-The CLI version of *radiance* contains many options than be passed to control the rendering behavior.
-They are organized by parts of the scene that will be affected.
-
-## Screenshots
+## Usage (TODO)
