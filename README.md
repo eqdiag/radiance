@@ -16,45 +16,13 @@ All dependencies are self-contained in this project using git's submodule system
 
 
 ## Features
+- [ ]
 
-### P1
-- [x] vecs
-- [x] rays
-- [x] ppm
-- [x] io, ppm writer
-- [x] sphere
-- [x] hittable list
-- [x] camera
-- [x] multiple samples per pixel
-- [x] diffuse
-- [x] gamma correction
-- [x] mirror
-- [x] dieletric
-
-### P2
-- [x] bounding boxes
-- [x] bvh
-    - [x] from hitlist
-    - [x] from list of hittables
-- [x] textures 
-    - [x] have an image
-    - [x] read from png
-    - [x] read from exr
-- [x] write to png
-
-- [x] fix texture coords
-- [x] triangles
-- [x] load obj
-
-- [x] glossy material
-- [x] plastic material (outside glass, inside diffuse)
-- [x] area lights (make emitting material)
 
 
 ### P3
 - [ ] stratified sampling
-- [ ] read 1-5
-- [ ]
+- [ ] multithreaded
 
 
 ### Bonus
