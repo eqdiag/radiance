@@ -1,8 +1,6 @@
 # radiance
 
-
-
-
+A physically-based path tracer.
 
 All dependencies are self-contained in this project using git's submodule system.
 
@@ -14,12 +12,6 @@ All dependencies are self-contained in this project using git's submodule system
 - pugixml: Parsing xml files for scene format
 - argh: Command line parsing
 
-
-# pTrace
-
-A physically-based path tracer based based on the stencil code for [Scotty3D](https://github.com/CMU-Graphics/Scotty3D).
-
-Setup is described [here](https://github.com/eqdiag/myScotty3d/tree/main#readme).
 
 
 # Features
